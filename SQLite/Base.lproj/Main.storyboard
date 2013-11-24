@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psE-Ma-LAh">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psE-Ma-LAh">
                                 <rect key="frame" x="123" y="56" width="75" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="创建数据表">
@@ -26,9 +26,65 @@
                                     <action selector="createTable" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Eja-YR-9Vj"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y56-9j-NYj">
+                                <rect key="frame" x="115" y="156" width="90" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="添加一条数据">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addData" destination="vXZ-lx-hvc" eventType="touchUpInside" id="tKs-X6-sNs"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入名字" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qg6-CI-xqW">
+                                <rect key="frame" x="36" y="118" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入年龄" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2FO-hb-TXh">
+                                <rect key="frame" x="146" y="118" width="75" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="0kB-OU-1gb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="高度" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8er-DQ-hhv">
+                                <rect key="frame" x="229" y="118" width="55" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="55" id="hTf-K4-I1B"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qg6-CI-xqW" firstAttribute="top" secondItem="psE-Ma-LAh" secondAttribute="bottom" constant="32" id="00F-bU-KtB"/>
+                            <constraint firstAttribute="trailing" secondItem="8er-DQ-hhv" secondAttribute="trailing" constant="36" id="1aE-QZ-WPR"/>
+                            <constraint firstAttribute="trailing" secondItem="Y56-9j-NYj" secondAttribute="trailing" constant="115" id="1rM-YL-pRu"/>
+                            <constraint firstAttribute="trailing" secondItem="psE-Ma-LAh" secondAttribute="trailing" constant="122" id="Duq-J7-Cqn"/>
+                            <constraint firstItem="psE-Ma-LAh" firstAttribute="top" secondItem="kND-qi-e3c" secondAttribute="bottom" constant="36" id="Gj3-IY-0V0"/>
+                            <constraint firstItem="Y56-9j-NYj" firstAttribute="centerX" secondItem="psE-Ma-LAh" secondAttribute="centerX" id="Hif-iM-MfD"/>
+                            <constraint firstItem="8er-DQ-hhv" firstAttribute="leading" secondItem="2FO-hb-TXh" secondAttribute="trailing" constant="8" symbolic="YES" id="HoC-fN-PeO"/>
+                            <constraint firstItem="Y56-9j-NYj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="115" id="KtK-Mp-WqW"/>
+                            <constraint firstItem="psE-Ma-LAh" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="123" id="RSl-DC-2Em"/>
+                            <constraint firstItem="qg6-CI-xqW" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="36" id="V2z-Di-0oR"/>
+                            <constraint firstItem="2FO-hb-TXh" firstAttribute="baseline" secondItem="8er-DQ-hhv" secondAttribute="baseline" id="W72-Od-a06"/>
+                            <constraint firstItem="2FO-hb-TXh" firstAttribute="leading" secondItem="qg6-CI-xqW" secondAttribute="trailing" constant="13" id="Z7g-iO-GOs"/>
+                            <constraint firstItem="2FO-hb-TXh" firstAttribute="baseline" secondItem="qg6-CI-xqW" secondAttribute="baseline" id="lXZ-96-b6A"/>
+                            <constraint firstItem="Y56-9j-NYj" firstAttribute="top" secondItem="qg6-CI-xqW" secondAttribute="bottom" constant="8" symbolic="YES" id="saN-yv-stv"/>
+                            <constraint firstItem="Y56-9j-NYj" firstAttribute="top" secondItem="2FO-hb-TXh" secondAttribute="bottom" constant="8" id="yyT-NY-ZjN"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="age" destination="2FO-hb-TXh" id="3cq-eo-9nj"/>
+                        <outlet property="height" destination="8er-DQ-hhv" id="kqJ-wp-kGI"/>
+                        <outlet property="name" destination="qg6-CI-xqW" id="87f-v2-ejv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
