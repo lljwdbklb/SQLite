@@ -10,12 +10,22 @@
 #import "LJSQLite.h"
 #import "Person.h"
 
-@interface LJJViewController ()
+@interface LJJViewController ()<UITableViewDataSource,UITableViewDelegate>
+{
+    
+}
+
+//添加操作
 @property (weak, nonatomic) IBOutlet UITextField *name;
 @property (weak, nonatomic) IBOutlet UITextField *age;
 @property (weak, nonatomic) IBOutlet UITextField *height;
+//删除操作
 @property (weak, nonatomic) IBOutlet UITextField *ID;
-
+//更新操作
+@property (weak, nonatomic) IBOutlet UITextField *uID;
+@property (weak, nonatomic) IBOutlet UITextField *uName;
+@property (weak, nonatomic) IBOutlet UITextField *uAge;
+@property (weak, nonatomic) IBOutlet UITextField *uHeight;
 @end
 
 /**
@@ -48,6 +58,15 @@
     Person * p = [[Person alloc]init];
     p.p_id = [_ID.text integerValue];
     [[LJSQLite sharedLJSQLite]deleteObject:p];
+}
+
+- (IBAction)updateObj {
+    Person * p = [[Person alloc]init];
+    p.p_id = [_uID.text integerValue];
+    p.name = _uName.text;
+    p.age = [_uAge.text integerValue];
+    p.height = [_uHeight.text doubleValue];
+    [[LJSQLite sharedLJSQLite] updateObject:p];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
