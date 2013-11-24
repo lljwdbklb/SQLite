@@ -330,6 +330,7 @@ _shared_implement(LJSQLite)
  *
  *  @param obj 对象
  */
+#pragma mark 更新数据
 -(void)updateObject:(NSObject *)obj {
     Class c = [obj class];
     //表名
@@ -361,7 +362,13 @@ _shared_implement(LJSQLite)
             continue;
         }
         
-        [sql appendFormat:@"%@ = %@ ,",[name lowercaseString],[obj valueForKey:name]];
+        //判断是否有字符串
+        NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
+        if([type hasPrefix:@"@"]) {
+            [sql appendFormat:@"%@ = '%@' ,",[name lowercaseString],[obj valueForKey:name]];
+        } else{
+            [sql appendFormat:@"%@ = %@ ,",[name lowercaseString],[obj valueForKey:name]];
+        }
         
     }
     //去除最后的逗号
