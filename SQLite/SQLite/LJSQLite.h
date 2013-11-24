@@ -32,6 +32,14 @@ _shared_interface(LJSQLite)
 //-(void)openDB:(NSString *)dbName;
 
 /**
+ *  执行sql语句
+ *
+ *  @param sql sql语句
+ *  @param msg 推送的消息
+ */
+-(void)execSQL:(NSString *)sql msg:(NSString *)msg;
+
+/**
  *
  *  创建数据表
  *
