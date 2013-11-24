@@ -12,7 +12,7 @@
 
 @interface LJJViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
-    
+    NSArray * _dataList;
 }
 
 //添加操作
@@ -26,6 +26,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *uName;
 @property (weak, nonatomic) IBOutlet UITextField *uAge;
 @property (weak, nonatomic) IBOutlet UITextField *uHeight;
+//查询
+@property (weak, nonatomic) IBOutlet UITableView *tableview;
+
+
 @end
 
 /**
@@ -38,6 +42,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+//    _dataList = [NSArray array];
 
 }
 
@@ -68,8 +73,30 @@
     p.height = [_uHeight.text doubleValue];
     [[LJSQLite sharedLJSQLite] updateObject:p];
 }
+- (IBAction)selectDatas:(id)sender {
+    _dataList = [[LJSQLite sharedLJSQLite] allObjects:[Person class]];
+    [_tableview reloadData];
+    
+}
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _dataList.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    Person * person = _dataList[indexPath.row];
+    cell.textLabel.text = person.name;
+    cell.detailTextLabel.text = [@(person.age) description];
+    
+    return cell;
+}
+
 @end

@@ -124,12 +124,28 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="h3H-Vt-uNI">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="dRP-G1-gRh" detailTextLabel="gmz-Ph-d6N" style="IBUITableViewCellStyleSubtitle" id="h3H-Vt-uNI">
                                         <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="h3H-Vt-uNI" id="0zv-il-BjX">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dRP-G1-gRh">
+                                                    <rect key="frame" x="15" y="3" width="34" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gmz-Ph-d6N">
+                                                    <rect key="frame" x="15" y="25" width="43" height="15"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
@@ -144,6 +160,9 @@
                                 <state key="normal" title="查询所有记录">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="selectDatas:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Gb4-tM-eAZ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -192,6 +211,7 @@
                         <outlet property="age" destination="2FO-hb-TXh" id="3cq-eo-9nj"/>
                         <outlet property="height" destination="8er-DQ-hhv" id="kqJ-wp-kGI"/>
                         <outlet property="name" destination="qg6-CI-xqW" id="87f-v2-ejv"/>
+                        <outlet property="tableview" destination="qNM-o4-hMm" id="jtL-TQ-ptf"/>
                         <outlet property="uAge" destination="m3D-KM-M6D" id="o3R-9u-z23"/>
                         <outlet property="uHeight" destination="gBR-5e-KXa" id="hfX-aC-7Jy"/>
                         <outlet property="uID" destination="iHs-hz-XXj" id="DmD-oU-CgM"/>
