@@ -21,6 +21,9 @@
 		BF1C80B318422670007EDF07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80951842266F007EDF07 /* UIKit.framework */; };
 		BF1C80BB18422670007EDF07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF1C80B918422670007EDF07 /* InfoPlist.strings */; };
 		BF1C80BD18422670007EDF07 /* SQLiteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80BC18422670007EDF07 /* SQLiteTests.m */; };
+		BF1C80CA184226A7007EDF07 /* LJSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80C8184226A7007EDF07 /* LJSQLite.m */; };
+		BF1C80CD184226CB007EDF07 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80CC184226CB007EDF07 /* Person.m */; };
+		BF1C80CF184227D2007EDF07 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,12 @@
 		BF1C80B818422670007EDF07 /* SQLiteTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SQLiteTests-Info.plist"; sourceTree = "<group>"; };
 		BF1C80BA18422670007EDF07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BF1C80BC18422670007EDF07 /* SQLiteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SQLiteTests.m; sourceTree = "<group>"; };
+		BF1C80C7184226A7007EDF07 /* LJSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJSQLite.h; sourceTree = "<group>"; };
+		BF1C80C8184226A7007EDF07 /* LJSQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJSQLite.m; sourceTree = "<group>"; };
+		BF1C80C9184226A7007EDF07 /* Simple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simple.h; sourceTree = "<group>"; };
+		BF1C80CB184226CB007EDF07 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		BF1C80CC184226CB007EDF07 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF1C80CF184227D2007EDF07 /* libsqlite3.dylib in Frameworks */,
 				BF1C80941842266F007EDF07 /* CoreGraphics.framework in Frameworks */,
 				BF1C80961842266F007EDF07 /* UIKit.framework in Frameworks */,
 				BF1C80921842266F007EDF07 /* Foundation.framework in Frameworks */,
@@ -101,6 +111,7 @@
 		BF1C80901842266F007EDF07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */,
 				BF1C80911842266F007EDF07 /* Foundation.framework */,
 				BF1C80931842266F007EDF07 /* CoreGraphics.framework */,
 				BF1C80951842266F007EDF07 /* UIKit.framework */,
@@ -112,11 +123,14 @@
 		BF1C80971842266F007EDF07 /* SQLite */ = {
 			isa = PBXGroup;
 			children = (
+				BF1C80C6184226A7007EDF07 /* SQLite */,
 				BF1C80A01842266F007EDF07 /* LJJAppDelegate.h */,
 				BF1C80A11842266F007EDF07 /* LJJAppDelegate.m */,
 				BF1C80A31842266F007EDF07 /* Main.storyboard */,
 				BF1C80A61842266F007EDF07 /* LJJViewController.h */,
 				BF1C80A71842266F007EDF07 /* LJJViewController.m */,
+				BF1C80CB184226CB007EDF07 /* Person.h */,
+				BF1C80CC184226CB007EDF07 /* Person.m */,
 				BF1C80A91842266F007EDF07 /* Images.xcassets */,
 				BF1C80981842266F007EDF07 /* Supporting Files */,
 			);
@@ -150,6 +164,16 @@
 				BF1C80B918422670007EDF07 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BF1C80C6184226A7007EDF07 /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				BF1C80C7184226A7007EDF07 /* LJSQLite.h */,
+				BF1C80C8184226A7007EDF07 /* LJSQLite.m */,
+				BF1C80C9184226A7007EDF07 /* Simple.h */,
+			);
+			path = SQLite;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,6 +275,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF1C809E1842266F007EDF07 /* main.m in Sources */,
+				BF1C80CA184226A7007EDF07 /* LJSQLite.m in Sources */,
+				BF1C80CD184226CB007EDF07 /* Person.m in Sources */,
 				BF1C80A21842266F007EDF07 /* LJJAppDelegate.m in Sources */,
 				BF1C80A81842266F007EDF07 /* LJJViewController.m in Sources */,
 			);
