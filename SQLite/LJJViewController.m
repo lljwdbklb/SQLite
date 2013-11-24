@@ -7,10 +7,16 @@
 //
 
 #import "LJJViewController.h"
+#import "LJSQLite.h"
+#import "Person.h"
 
 @interface LJJViewController ()
 
 @end
+
+/**
+ *  在SQLite.h 设置数据库名
+ */
 
 @implementation LJJViewController
 
@@ -18,12 +24,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark 常见表格
+-(IBAction)createTable {
+    [[LJSQLite sharedLJSQLite] createTable:[Person class] autoincrement:YES];
 }
 
 @end
