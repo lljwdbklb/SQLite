@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *name;
 @property (weak, nonatomic) IBOutlet UITextField *age;
 @property (weak, nonatomic) IBOutlet UITextField *height;
+@property (weak, nonatomic) IBOutlet UITextField *ID;
 
 @end
 
@@ -43,4 +44,13 @@
     [[LJSQLite sharedLJSQLite]addObject:p];
 }
 
+- (IBAction)deleteObj:(id)sender {
+    Person * p = [[Person alloc]init];
+    p.p_id = [_ID.text integerValue];
+    [[LJSQLite sharedLJSQLite]deleteObject:p];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
 @end

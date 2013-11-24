@@ -60,13 +60,34 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入ID" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hDy-oe-9nS">
+                                <rect key="frame" x="112" y="207" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="uL6-L2-Yrb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dDc-V6-gIW">
+                                <rect key="frame" x="115" y="245" width="90" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="删除一条数据">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteObj:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="E0b-DF-pkh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="qg6-CI-xqW" firstAttribute="top" secondItem="psE-Ma-LAh" secondAttribute="bottom" constant="32" id="00F-bU-KtB"/>
                             <constraint firstAttribute="trailing" secondItem="8er-DQ-hhv" secondAttribute="trailing" constant="36" id="1aE-QZ-WPR"/>
                             <constraint firstAttribute="trailing" secondItem="Y56-9j-NYj" secondAttribute="trailing" constant="115" id="1rM-YL-pRu"/>
+                            <constraint firstItem="hDy-oe-9nS" firstAttribute="centerX" secondItem="Y56-9j-NYj" secondAttribute="centerX" id="6IN-pZ-cbP"/>
                             <constraint firstAttribute="trailing" secondItem="psE-Ma-LAh" secondAttribute="trailing" constant="122" id="Duq-J7-Cqn"/>
+                            <constraint firstItem="hDy-oe-9nS" firstAttribute="centerX" secondItem="dDc-V6-gIW" secondAttribute="centerX" id="E7d-4x-ei9"/>
                             <constraint firstItem="psE-Ma-LAh" firstAttribute="top" secondItem="kND-qi-e3c" secondAttribute="bottom" constant="36" id="Gj3-IY-0V0"/>
                             <constraint firstItem="Y56-9j-NYj" firstAttribute="centerX" secondItem="psE-Ma-LAh" secondAttribute="centerX" id="Hif-iM-MfD"/>
                             <constraint firstItem="8er-DQ-hhv" firstAttribute="leading" secondItem="2FO-hb-TXh" secondAttribute="trailing" constant="8" symbolic="YES" id="HoC-fN-PeO"/>
@@ -75,12 +96,15 @@
                             <constraint firstItem="qg6-CI-xqW" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="36" id="V2z-Di-0oR"/>
                             <constraint firstItem="2FO-hb-TXh" firstAttribute="baseline" secondItem="8er-DQ-hhv" secondAttribute="baseline" id="W72-Od-a06"/>
                             <constraint firstItem="2FO-hb-TXh" firstAttribute="leading" secondItem="qg6-CI-xqW" secondAttribute="trailing" constant="13" id="Z7g-iO-GOs"/>
+                            <constraint firstItem="hDy-oe-9nS" firstAttribute="top" secondItem="Y56-9j-NYj" secondAttribute="bottom" constant="21" id="fBX-No-xAj"/>
                             <constraint firstItem="2FO-hb-TXh" firstAttribute="baseline" secondItem="qg6-CI-xqW" secondAttribute="baseline" id="lXZ-96-b6A"/>
+                            <constraint firstItem="dDc-V6-gIW" firstAttribute="top" secondItem="hDy-oe-9nS" secondAttribute="bottom" constant="8" symbolic="YES" id="mou-fX-9et"/>
                             <constraint firstItem="Y56-9j-NYj" firstAttribute="top" secondItem="qg6-CI-xqW" secondAttribute="bottom" constant="8" symbolic="YES" id="saN-yv-stv"/>
                             <constraint firstItem="Y56-9j-NYj" firstAttribute="top" secondItem="2FO-hb-TXh" secondAttribute="bottom" constant="8" id="yyT-NY-ZjN"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="ID" destination="hDy-oe-9nS" id="R9u-Na-I5D"/>
                         <outlet property="age" destination="2FO-hb-TXh" id="3cq-eo-9nj"/>
                         <outlet property="height" destination="8er-DQ-hhv" id="kqJ-wp-kGI"/>
                         <outlet property="name" destination="qg6-CI-xqW" id="87f-v2-ejv"/>
