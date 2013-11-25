@@ -281,6 +281,7 @@ _shared_implement(LJSQLite)
             if (value){
                 //拼接
                 if([type hasPrefix:@"@"]){
+                    //是否模型类
                     if (![type rangeOfString:@"String"].length && ![type rangeOfString:@"Date"].length && ![type rangeOfString:@"Image"].length) {
                         [sql appendFormat:@"%@_id ,",[name lowercaseString]];
                     } else {
@@ -315,13 +316,9 @@ _shared_implement(LJSQLite)
 #warning 图片格式
 //                [sql appendFormat:@"'%@' ,",[UIImagePNGRepresentation(elems[i])bytes]];
             } else {
-                //截取类名 Book
-//                NSString * subName = [type stringByReplacingClassName];
                 NSValue * value = nil;
-                //elems[i] b  id
                 //在数据表中查询该数据
                 if (![self isObject:elems[i]]){ //添加数据对象
-#warning 如何获取添加后的id
                     [self addObject:elems[i]];
                     value = [[self lastObject:[elems[i] class]] primaryKey];
                 } else {//查找数据对象
@@ -352,14 +349,9 @@ _shared_implement(LJSQLite)
     //表名
     NSString * tableName = kTableName(c);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"DELETE FROM %@ WHERE ",tableName];
-    unsigned int outCount = 0;
-    Ivar *ivars = class_copyIvarList(c, &outCount);
     
-    for (int i = 0; i<outCount; i++){
-        Ivar ivar = ivars[i];
-        // 1.属性名
-        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)] ;
-        
+    
+    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //包含id为主键
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
         if ((range.length + range.location)== name.length){
@@ -367,9 +359,9 @@ _shared_implement(LJSQLite)
             name = [name substringFromIndex:1];
             //拼接
             [sql appendFormat:@"%@ = %@",[name lowercaseString] ,[obj valueForKey:name]];
-            break;
+            *stop = YES;
         }
-    }
+    }];
     [self execSQL:sql msg:@"删除一条数据"];
 }
 
@@ -389,16 +381,10 @@ _shared_implement(LJSQLite)
     NSMutableString * sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ",tableName];
 
     //存放id
-    NSString * ID;
-    NSString * IDValue;
+    __block NSString * ID;
+    __block NSString * IDValue;
     
-    unsigned int outCount = 0;
-    Ivar *ivars = class_copyIvarList(c, &outCount);
-    
-    for (int i = 0; i<outCount; i++){
-        Ivar ivar = ivars[i];
-        // 1.属性名
-        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)] ;
+    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //去下划线
         name = [name substringFromIndex:1];
         
@@ -408,18 +394,26 @@ _shared_implement(LJSQLite)
             //拼接
             ID = [name lowercaseString];
             IDValue = [obj valueForKey:name];
-            continue;
+        } else {
+            NSValue * value = [obj valueForKey:name];
+            //判断是否有字符串
+            if (value) {
+                if([type hasPrefix:@"@"]){
+                    if (![type rangeOfString:@"String"].length && ![type rangeOfString:@"Date"].length && ![type rangeOfString:@"Image"].length) {//模型对象
+                        [sql appendFormat:@"%@_id = %@,",[name lowercaseString],[obj valueForKey:name]];
+                    } else if([type rangeOfString:@"Date"].length) {//时间格式
+                        NSDateFormatter * fmt = [[NSDateFormatter alloc]init];
+                        [fmt setDateFormat:kDateFmtStr];
+                        [sql appendFormat:@"%@ = '%@' ,",[name lowercaseString],[fmt stringFromDate:(NSDate*)value]];
+                    } else {//字符串
+                        [sql appendFormat:@"%@ = '%@' ,",[name lowercaseString],value];
+                    }
+                } else{//数据类型
+                    [sql appendFormat:@"%@ = %@ ,",[name lowercaseString],value];
+                }
+            }
         }
-        
-        //判断是否有字符串
-        NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
-        if([type hasPrefix:@"@"]){
-            [sql appendFormat:@"%@ = '%@' ,",[name lowercaseString],[obj valueForKey:name]];
-        } else{
-            [sql appendFormat:@"%@ = %@ ,",[name lowercaseString],[obj valueForKey:name]];
-        }
-        
-    }
+    }];
     //去除最后的逗号
     [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     
