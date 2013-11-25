@@ -107,4 +107,16 @@ _shared_interface(LJSQLite)
  *  @return 结果集
  */
 - (NSArray *) queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass;
+
+/**
+ *  判断该对象数据是否存在对应数据表中
+ *
+ *  该判定按照对象中的 isEqual: 方法来判定
+ *  （注：建议重写对象中的 isEqual: 方法）
+ *
+ *  @param obj 对象
+ *
+ *  @return YES:存在  NO:不存在
+ */
+- (BOOL)isObject:(NSObject *)obj;
 @end
