@@ -31,6 +31,8 @@ typedef void(^IvarNamesUsingBlock)(NSString * name,NSString * type,int idx,BOOL 
  *  @return 返回对象主键名
  */
 - (NSString *)primaryKeyName;
++ (NSString *)primaryKeyName;
+//在分类中不能添加成员变量
 //@property (nonatomic,strong,readonly) NSString * primaryKeyName;
 
 /**

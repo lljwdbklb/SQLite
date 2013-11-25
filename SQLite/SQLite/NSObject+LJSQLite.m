@@ -101,6 +101,22 @@
 }
 
 - (NSString *)primaryKeyName {
+//    static NSString * primaryKeyName = nil;
+//    if (primaryKeyName == nil) {
+//        Class c = [self class];
+//        [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+//            //包含id为主键
+//            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+//            if ((range.length + range.location)== name.length){
+//                primaryKeyName = name;
+//                *stop = YES;
+//            }
+//        }];
+//    }
+    return [[self class] primaryKeyName];
+}
+
++(NSString *)primaryKeyName {
     static NSString * primaryKeyName = nil;
     if (primaryKeyName == nil) {
         Class c = [self class];
