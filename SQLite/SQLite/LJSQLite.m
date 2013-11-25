@@ -173,9 +173,9 @@ _shared_implement(LJSQLite)
 - (void)createTable:(Class)objClass autoincrement:(BOOL)autoincrement{
     //表名
     NSString * tableName = kTableName(objClass);
-//    if (autoincrement){
-//        [_tablesAuto addObject:tableName];
-//    }
+    if (autoincrement){
+        [_tablesAuto addObject:tableName];
+    }
     
     //判断死循环创建表格
     if ([_tables containsObject:tableName]){
@@ -184,22 +184,15 @@ _shared_implement(LJSQLite)
     [_tables addObject:tableName];
     
     NSMutableString * sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (",tableName];
-    
-    unsigned int outCount = 0;
-    Ivar *ivars = class_copyIvarList(objClass, &outCount);
     //判断是否有一个主键
-    BOOL isPrimary = NO;
+    __block BOOL isPrimary = NO;
     
-    for (int i = 0; i<outCount; i++){
-        Ivar ivar = ivars[i];
-        
-        // 1.参数名
-        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+    
+    [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //去下划线
         name = [[name substringFromIndex:1] lowercaseString];
-        
+
         //2.判断属性
-        NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
         if([type hasPrefix:@"@"]){
             if ([type rangeOfString:@"String"].length){
                 [sql appendFormat:@"%@ text ",name];
@@ -213,7 +206,7 @@ _shared_implement(LJSQLite)
                 [self createTable:NSClassFromString(subName)autoincrement:YES];
                 [sql appendFormat:@"%@_id integer",name];
             }
-            
+
         } else  { // 非对象类型
             if ([type isEqualToString:@"d"]||[type isEqualToString:@"f"]){
                 [sql appendFormat:@"%@ float ",name];
@@ -221,7 +214,7 @@ _shared_implement(LJSQLite)
                 [sql appendFormat:@"%@ integer ",name];
             }
         }
-        
+
         //包含id字段为主键
         NSRange range = [name rangeOfString:@"id"];
         if ((range.length + range.location)== name.length && !isPrimary){
@@ -229,7 +222,8 @@ _shared_implement(LJSQLite)
             isPrimary = YES;
         }
         [sql appendString:@","];
-    }
+    }];
+    
     //去除最后的逗号
     [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     [sql appendString:@");"];
@@ -271,14 +265,8 @@ _shared_implement(LJSQLite)
     //属性
     NSMutableArray * types = [NSMutableArray array];
     
-    unsigned int outCount = 0;
-    Ivar *ivars = class_copyIvarList(c, &outCount);
     
-    for (int i = 0; i<outCount; i++){
-        Ivar ivar = ivars[i];
-        
-        // 1.属性名
-        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //去下划线
         name = [name substringFromIndex:1];
         
@@ -287,23 +275,62 @@ _shared_implement(LJSQLite)
         //有自动增值属性可以省去添加主键的操作
         //若没有则按照对象中的主键添加
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-        if ((range.length + range.location)== name.length && [_tablesAuto containsObject:tableName]){
-            continue;
+        if ((range.length + range.location) != name.length || ![_tablesAuto containsObject:tableName]){
+            NSValue * value = [obj valueForKey:name];
+            //参数为空不运行
+            if (value){
+                //拼接
+                if([type hasPrefix:@"@"]){
+                    if (![type rangeOfString:@"String"].length && ![type rangeOfString:@"Date"].length && ![type rangeOfString:@"Image"].length) {
+                        [sql appendFormat:@"%@_id ,",[name lowercaseString]];
+                    } else {
+                        [sql appendFormat:@"%@ ,",[name lowercaseString]];
+                    }
+                } else {
+                    [sql appendFormat:@"%@ ,",[name lowercaseString]];
+                }
+                
+                
+                //参数
+                [elems addObject:value];
+                [types addObject:type];
+            }
         }
-        
-        NSValue * value = [obj valueForKey:name];
-        //参数为空不运行
-        if (value){
-            //拼接
-            [sql appendFormat:@"%@ ,",[name lowercaseString]];
-            //参数
-            [elems addObject:value];
-            
-            //2.属性
-            NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
-            [types addObject:type];
-        }
-    }
+    }];
+    
+//    unsigned int outCount = 0;
+//    Ivar *ivars = class_copyIvarList(c, &outCount);
+//    
+//    for (int i = 0; i<outCount; i++){
+//        Ivar ivar = ivars[i];
+//        
+//        // 1.属性名
+//        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+//        //去下划线
+//        name = [name substringFromIndex:1];
+//        
+//        //包含id为主键
+//        //这句话只要是判断是否是有主键并判断是否有自动增值
+//        //有自动增值属性可以省去添加主键的操作
+//        //若没有则按照对象中的主键添加
+//        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+//        if ((range.length + range.location)== name.length && [_tablesAuto containsObject:tableName]){
+//            continue;
+//        }
+//        
+//        NSValue * value = [obj valueForKey:name];
+//        //参数为空不运行
+//        if (value){
+//            //拼接
+//            [sql appendFormat:@"%@ ,",[name lowercaseString]];
+//            //参数
+//            [elems addObject:value];
+//            
+//            //2.属性
+//            NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
+//            [types addObject:type];
+//        }
+//    }
     //去除最后的逗号
     [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     [sql appendString:@")VALUES ( "];
@@ -476,6 +503,23 @@ _shared_implement(LJSQLite)
  */
 - (id)lastObject:(Class)objClass {
     return [self allObjects:objClass].lastObject;
+}
+
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param params   参数名
+ *
+ *  @return 返回的对象们
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params {
+    //表名
+    NSString * tableName = kTableName(objClass);
+    //update t_person set name = 'nimei',age = 12 , height = 1.8 where id = 0
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE ",tableName];
+    
+    return nil;
 }
 
 
