@@ -7,9 +7,12 @@
 //
 
 #import "LJSQLite.h"
+
 #import <sqlite3.h>
 #import <objc/message.h>
 #import <objc/runtime.h>
+
+#import "NSString+LJSQLite.h"
 
 #define kFile(dbName) [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[dbName stringByAppendingPathExtension:@"db"]]
 
@@ -22,6 +25,8 @@
     
     //记录主键是否是自动增值的表格
     NSMutableSet    * _tablesAuto;
+    //所有生成的表格
+    NSMutableSet    * _tables;
 }
 
 @end
@@ -33,6 +38,7 @@ _shared_implement(LJSQLite)
     self = [super init];
     if (self) {
         _tablesAuto = [NSMutableSet set];
+        _tables = [NSMutableSet set];
         [self openDB];
     }
     return self;
@@ -82,7 +88,14 @@ _shared_implement(LJSQLite)
     NSLog(@"%@",sql);
 #endif
 }
-
+/**
+ *  返回指定sql查询的结果集
+ *
+ *  @param sql      sql语句
+ *  @param objClass 对象类
+ *
+ *  @return 结果集
+ */
 - (NSArray *) queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass{
     sqlite3_stmt * stmt = NULL;
     //判断是否正常运行sql语句
@@ -117,6 +130,7 @@ _shared_implement(LJSQLite)
                         [fmt setDateFormat:kDateFmtStr];
                         [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)]]forKey:name];
                     } else if([type rangeOfString:@"Image"].length) {
+#warning image
                     }
                     
                 } else  { // 非对象类型
@@ -159,6 +173,12 @@ _shared_implement(LJSQLite)
         [_tablesAuto addObject:tableName];
     }
     
+    //判断死循环创建表格
+    if ([_tables containsObject:tableName]) {
+        return;
+    }
+    [_tables addObject:tableName];
+    
     NSMutableString * sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (",tableName];
     
     unsigned int outCount = 0;
@@ -173,25 +193,29 @@ _shared_implement(LJSQLite)
         NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
         //去下划线
         name = [[name substringFromIndex:1] lowercaseString];
-        //拼接
-        [sql appendFormat:@"%@ ",name];
         
         //2.判断属性
         NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
         if([type hasPrefix:@"@"]) {
             if ([type rangeOfString:@"String"].length) {
-                [sql appendFormat:@"text "];
+                [sql appendFormat:@"%@ text ",name];
             } else if([type rangeOfString:@"Date"].length) {
-                [sql appendString:@"date "];
+                [sql appendFormat:@"%@ date ",name];
             } else if([type rangeOfString:@"Image"].length) {
-                [sql appendString:@"blob "];
+                [sql appendFormat:@"%@ blob ",name];
+            } else {
+                //截取类名
+                NSString * subName = [type stringByReplacingClassName];
+                [self createTable:NSClassFromString(subName) autoincrement:YES];
+                
+                [sql appendFormat:@"%@_id integer",name];
             }
             
         } else  { // 非对象类型
             if ([type isEqualToString:@"d"]||[type isEqualToString:@"f"]) {
-                [sql appendFormat:@"float "];
+                [sql appendFormat:@"%@ float ",name];
             }  else {
-                [sql appendFormat:@"integer "];
+                [sql appendFormat:@"%@ integer ",name];
             }
         }
         
@@ -287,7 +311,8 @@ _shared_implement(LJSQLite)
                 [fmt setDateFormat:kDateFmtStr];
                 [sql appendFormat:@"'%@' ,",[fmt stringFromDate:elems[i]]];
             } else if([type rangeOfString:@"Image"].length) {
-                [sql appendFormat:@"'%@' ,",elems[i]];
+#warning 图片格式
+                [sql appendFormat:@"'%@' ,",[UIImagePNGRepresentation(elems[i]) bytes]];
             }
         } else  { // 非对象类型
             [sql appendFormat:@"%@ ,",elems[i]];
