@@ -145,6 +145,9 @@ _shared_implement(LJSQLite)
             [arrayM addObject:obj];
         }
         
+#ifdef kLOG
+        NSLog(@"%@",sql);
+#endif
         return arrayM;
     }
     
@@ -207,7 +210,6 @@ _shared_implement(LJSQLite)
                 //截取类名
                 NSString * subName = [type stringByReplacingClassName];
                 [self createTable:NSClassFromString(subName) autoincrement:YES];
-                
                 [sql appendFormat:@"%@_id integer",name];
             }
             
@@ -286,14 +288,19 @@ _shared_implement(LJSQLite)
             continue;
         }
         
-        //拼接
-        [sql appendFormat:@"%@ ,",[name lowercaseString]];
-        //参数
-        [elems addObject:[obj valueForKey:name]];
+        NSValue * value = [obj valueForKey:name];
+        //参数为空不运行
+        if (value) {
+            //拼接
+            [sql appendFormat:@"%@ ,",[name lowercaseString]];
+            //参数
+            [elems addObject:value];
+            
+            //2.属性
+            NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
+            [types addObject:type];
+        }
         
-        //2.属性
-        NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
-        [types addObject:type];
         
     }
     //去除最后的逗号
@@ -312,7 +319,7 @@ _shared_implement(LJSQLite)
                 [sql appendFormat:@"'%@' ,",[fmt stringFromDate:elems[i]]];
             } else if([type rangeOfString:@"Image"].length) {
 #warning 图片格式
-                [sql appendFormat:@"'%@' ,",[UIImagePNGRepresentation(elems[i]) bytes]];
+//                [sql appendFormat:@"'%@' ,",[UIImagePNGRepresentation(elems[i]) bytes]];
             }
         } else  { // 非对象类型
             [sql appendFormat:@"%@ ,",elems[i]];
@@ -429,6 +436,35 @@ _shared_implement(LJSQLite)
     NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ;",tableName];
     
     return [self queryPersonsWithSql:sql objClass:objClass];
+}
+
+- (BOOL) isObject:(NSObject *)obj {
+    Class c = [obj class];
+    NSString * tableName = kTableName(c);
+    //sql语句
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE ",tableName];
+    
+    unsigned int outCount = 0;
+    Ivar *ivars = class_copyIvarList(c, &outCount);
+    
+    for (int i = 0; i<outCount; i++) {
+        Ivar ivar = ivars[i];
+        // 1.属性名
+        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)] ;
+        
+        //包含id为主键
+        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+        if ((range.length + range.location) == name.length) {
+            //去下划线
+            name = [name substringFromIndex:1];
+            //拼接
+            [sql appendFormat:@"%@ = %@;",[name lowercaseString] ,[obj valueForKey:name]];
+            break;
+        }
+        
+    }
+    
+    return [self queryPersonsWithSql:sql objClass:c].count;
 }
 
 @end
