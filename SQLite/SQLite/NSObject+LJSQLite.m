@@ -42,8 +42,6 @@
         //包含id为主键
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
         if ((range.length + range.location)== name.length){
-            //去下划线
-            name = [name substringFromIndex:1];
             value = [self valueForKey:name];
             *stop = YES;
         }
@@ -64,6 +62,8 @@
         Ivar ivar = ivars[i];
         // 1.属性名
         NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)] ;
+        //去下划线
+        name = [name substringFromIndex:1];
         //2.数据类型
         NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
         BOOL stop = NO;
@@ -82,8 +82,6 @@
 - (NSDictionary *)params {
     NSMutableDictionary * params = [NSMutableDictionary dictionary];
     [[self class] enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //去下划线
-        name = [name substringFromIndex:1];
         NSValue * value = [self valueForKey:name];
         if (value) {
             [params setObject:value forKey:name];

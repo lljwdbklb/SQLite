@@ -189,8 +189,6 @@ _shared_implement(LJSQLite)
     
     
     [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //去下划线
-        name = [[name substringFromIndex:1] lowercaseString];
 
         //2.判断属性
         if([type hasPrefix:@"@"]){
@@ -267,8 +265,7 @@ _shared_implement(LJSQLite)
     
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //去下划线
-        name = [name substringFromIndex:1];
+         
         
         //包含id为主键
         //这句话只要是判断是否是有主键并判断是否有自动增值
@@ -355,8 +352,6 @@ _shared_implement(LJSQLite)
         //包含id为主键
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
         if ((range.length + range.location)== name.length){
-            //去下划线
-            name = [name substringFromIndex:1];
             //拼接
             [sql appendFormat:@"%@ = %@",[name lowercaseString] ,[obj valueForKey:name]];
             *stop = YES;
@@ -385,8 +380,7 @@ _shared_implement(LJSQLite)
     __block NSString * IDValue;
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //去下划线
-        name = [name substringFromIndex:1];
+         
         
         //包含id为主键
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
@@ -477,8 +471,7 @@ _shared_implement(LJSQLite)
     NSString * tableName = kTableName(objClass);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE ",tableName];
     [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //去下划线
-        name = [name substringFromIndex:1];
+         
         NSValue * value = params[name];
         //包含id为主键
         NSRange range = [[name lowercaseString] rangeOfString:@"id"];
