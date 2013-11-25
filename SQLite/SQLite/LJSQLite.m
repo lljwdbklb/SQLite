@@ -2,7 +2,7 @@
 //  LJSQLite.m
 //  SQLLift
 //
-//  Created by Jun on 13-11-24.
+//  Created by Jun on 13-  11- 24.
 //  Copyright (c) 2013年 Jun. All rights reserved.
 //
 
@@ -12,6 +12,9 @@
 #import <objc/runtime.h>
 
 #define kFile(dbName) [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[dbName stringByAppendingPathExtension:@"db"]]
+
+#define kDateFmtStr @"yyyy-MM-dd hh:mm:ss"
+
 
 @interface LJSQLite()
 {
@@ -26,7 +29,7 @@
 @implementation LJSQLite
 _shared_implement(LJSQLite)
 
--(id)init {
+- (id) init {
     self = [super init];
     if (self) {
         _tablesAuto = [NSMutableSet set];
@@ -42,7 +45,7 @@ _shared_implement(LJSQLite)
  *
  *  @param dbName 数据库的名字
  */
--(void)openDB {
+- (void) openDB {
     
 //    NSLog(@"%@",kFile(dbName));
     _db = NULL;
@@ -62,7 +65,7 @@ _shared_implement(LJSQLite)
  *  @param sql sql语句
  *  @param msg 推送的消息
  */
--(void)execSQL:(NSString *)sql msg:(NSString *)msg {
+- (void) execSQL:(NSString *)sql msg:(NSString *)msg {
     //3.在数据库中生成表格
     char *errmsg;
     if (SQLITE_OK == sqlite3_exec(_db, sql.UTF8String, NULL, NULL, &errmsg)){
@@ -71,7 +74,7 @@ _shared_implement(LJSQLite)
 #endif
     } else {
 #ifdef kLOG
-        NSLog(@"%@失败 -- %s",msg,errmsg);
+        NSLog(@"%@失败 - -  %s",msg,errmsg);
 #endif
     }
     
@@ -80,10 +83,10 @@ _shared_implement(LJSQLite)
 #endif
 }
 
--(NSArray *)queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass{
+- (NSArray *) queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass{
     sqlite3_stmt * stmt = NULL;
     //判断是否正常运行sql语句
-    if (SQLITE_OK == sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL)) {
+    if (SQLITE_OK == sqlite3_prepare_v2(_db, sql.UTF8String, - 1, &stmt, NULL)) {
         
         NSMutableArray * arrayM = [NSMutableArray array];
         
@@ -110,6 +113,9 @@ _shared_implement(LJSQLite)
                     if ([type rangeOfString:@"String"].length) {
                         [obj setValue:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)] forKey:name];
                     } else if([type rangeOfString:@"Date"].length) {
+                        NSDateFormatter * fmt = [[NSDateFormatter alloc]init];
+                        [fmt setDateFormat:kDateFmtStr];
+                        [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)]]forKey:name];
                     } else if([type rangeOfString:@"Image"].length) {
                     }
                     
@@ -132,12 +138,12 @@ _shared_implement(LJSQLite)
 }
 
 
-#pragma mark - 表格操作
+#pragma mark -  表格操作
 /**
  *
  *  创建数据表
  *
- *  数据表名 ，默认在对象名前加上t_前缀并为小写 Person（对象名） -> t_person（生成表名）
+ *  数据表名 ，默认在对象名前加上t_前缀并为小写 Person（对象名） - > t_person（生成表名）
  *
  *  默认含id的的属性名为主键，不分大小写
  *
@@ -145,8 +151,8 @@ _shared_implement(LJSQLite)
  *
  *  @param objClassass 对象名
  */
-#pragma mark - 生成表格
--(void)createTable:(Class)objClass autoincrement:(BOOL)autoincrement{
+#pragma mark -  生成表格
+- (void) createTable:(Class)objClass autoincrement:(BOOL)autoincrement{
     //表名
     NSString * tableName = kTableName(objClass);
     if (autoincrement) {
@@ -198,7 +204,7 @@ _shared_implement(LJSQLite)
         [sql appendString:@","];
     }
     //去除最后的逗号
-    [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+    [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     [sql appendString:@");"];
     
     [self execSQL:sql msg:@"创建表格"];
@@ -211,7 +217,7 @@ _shared_implement(LJSQLite)
 }
 
 #pragma mark 删除表格
--(void)dropTable:(Class)objClass {
+- (void) dropTable:(Class)objClass {
     //表名
     NSString * tableName = kTableName([objClass class]);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"DROP TABLE  %@;",tableName];
@@ -220,14 +226,14 @@ _shared_implement(LJSQLite)
     
 }
 
-#pragma mark - 数据操作
+#pragma mark -  数据操作
 /**
  *  添加一个对象数据到相应表格中
  *
  *  @param obj 对象
  */
 #pragma mark 添加一条数据
--(void)addObject:(NSObject *)obj {
+- (void) addObject:(NSObject *)obj {
     Class c = [obj class];
     //表名
     NSString * tableName = kTableName(c);
@@ -267,20 +273,28 @@ _shared_implement(LJSQLite)
         
     }
     //去除最后的逗号
-    [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+    [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     [sql appendString:@") VALUES ( "];
     
     for (int i = 0; i<elems.count; i++) {
         //2.判断属性
         NSString *type =types[i];
         if([type hasPrefix:@"@"]) {
-            [sql appendFormat:@"'%@' ,",elems[i]];
+            if ([type rangeOfString:@"String"].length) {
+                [sql appendFormat:@"'%@' ,",elems[i]];
+            } else if([type rangeOfString:@"Date"].length) {
+                NSDateFormatter * fmt = [[NSDateFormatter alloc]init];
+                [fmt setDateFormat:kDateFmtStr];
+                [sql appendFormat:@"'%@' ,",[fmt stringFromDate:elems[i]]];
+            } else if([type rangeOfString:@"Image"].length) {
+                [sql appendFormat:@"'%@' ,",elems[i]];
+            }
         } else  { // 非对象类型
             [sql appendFormat:@"%@ ,",elems[i]];
         }
     }
     //去除最后的逗号
-    [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+    [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     [sql appendString:@"); "];
     
     [self execSQL:sql msg:@"添加一条数据"];
@@ -293,7 +307,7 @@ _shared_implement(LJSQLite)
  *  @param obj 对象
  */
 #pragma mark 删除一条数据
--(void)deleteObject:(NSObject *)obj {
+- (void) deleteObject:(NSObject *)obj {
     Class c = [obj class];
     //表名
     NSString * tableName = kTableName(c);
@@ -328,7 +342,7 @@ _shared_implement(LJSQLite)
  *  @param obj 对象
  */
 #pragma mark 更新数据
--(void)updateObject:(NSObject *)obj {
+- (void) updateObject:(NSObject *)obj {
     Class c = [obj class];
     //表名
     NSString * tableName = kTableName(c);
@@ -369,7 +383,7 @@ _shared_implement(LJSQLite)
         
     }
     //去除最后的逗号
-    [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+    [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     
     if (ID) {
         [sql appendFormat:@" WHERE %@ = %@;",ID,IDValue];
@@ -384,7 +398,7 @@ _shared_implement(LJSQLite)
  *  @param objClass 对应的对象
  */
 #pragma mark 查询表格
--(NSArray *)allObjects:(Class)objClass {
+- (NSArray *) allObjects:(Class)objClass {
     NSString * tableName = kTableName(objClass);
     //sql语句
     NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ;",tableName];

@@ -33,7 +33,7 @@ _shared_interface(LJSQLite)
  *
  *  @param dbName 数据库的名字
  */
-//-(void)openDB:(NSString *)dbName;
+//- (void)openDB:(NSString *)dbName;
 
 /**
  *  执行sql语句
@@ -41,13 +41,13 @@ _shared_interface(LJSQLite)
  *  @param sql sql语句
  *  @param msg 推送的消息
  */
--(void)execSQL:(NSString *)sql msg:(NSString *)msg;
+- (void) execSQL:(NSString *)sql msg:(NSString *)msg;
 
 /**
  *
  *  创建数据表
  *
- *  数据表名 ，默认在对象名前加上t_前缀并为小写 Person（对象名） -> t_person（生成表名）
+ *  数据表名 ，默认在对象名前加上t_前缀并为小写 Person（对象名） - > t_person（生成表名）
  *
  *  默认含id的的属性名为主键,不分大小写
  *
@@ -57,21 +57,21 @@ _shared_interface(LJSQLite)
  *  @param autoincrement    主键自动增值属性，默认为NO
  *
  */
--(void)createTable:(Class)objClass autoincrement:(BOOL)autoincrement;
+- (void) createTable:(Class)objClass autoincrement:(BOOL)autoincrement;
 
 /**
  *  删除对象对应表格
  *
  *  @param objClass 对象类
  */
--(void)dropTable:(Class)objClass;
+- (void) dropTable:(Class)objClass;
 
 /**
  *  添加一个对象数据到相应表格中
  *
  *  @param obj 对象
  */
--(void)addObject:(NSObject *)obj;
+- (void) addObject:(NSObject *)obj;
 
 /**
  *  从相应的表格中删除一条对象数据
@@ -80,7 +80,7 @@ _shared_interface(LJSQLite)
  *
  *  @param obj 对象
  */
--(void)deleteObject:(NSObject *)obj;
+- (void) deleteObject:(NSObject *)obj;
 
 /**
  *  从相应的表格中修改属性
@@ -89,14 +89,14 @@ _shared_interface(LJSQLite)
  *
  *  @param obj 对象
  */
--(void)updateObject:(NSObject *)obj;
+- (void) updateObject:(NSObject *)obj;
 
 /**
  *  查询相应类的表格的所有数据
  *
  *  @param objClass 对象类
  */
--(NSArray *)allObjects:(Class)objClass;
+- (NSArray *) allObjects:(Class)objClass;
 
 /**
  *  返回指定sql查询的结果集
@@ -106,5 +106,5 @@ _shared_interface(LJSQLite)
  *
  *  @return 结果集
  */
--(NSArray *)queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass;
+- (NSArray *) queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass;
 @end
