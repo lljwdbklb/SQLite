@@ -132,6 +132,15 @@ _shared_implement(LJSQLite)
                         [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)]]forKey:name];
                     } else if([type rangeOfString:@"Image"].length){
 #warning image
+                    } else { //模型对象 这里实现多表查询 表的嵌套关系
+                        //生成模型
+                        Class subClass = NSClassFromString([type stringByReplacingClassName]);
+//                        NSObject * subObj = [[subClass alloc]init];
+                        //获取模型主键
+                        NSString * primaryKey = [subClass primaryKeyName];
+                        //获取对应的模型对象
+                        NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : [NSNumber numberWithInteger:sqlite3_column_int(stmt, i)]}];
+                        [obj setValue:subObj forKey:name];
                     }
                     
                 } else  { // 非对象类型
@@ -473,17 +482,19 @@ _shared_implement(LJSQLite)
     [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
          
         NSValue * value = params[name];
-        //包含id为主键
-        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-        if ((range.length + range.location)== name.length){
-            if (![value isEqualToValue:@0]) {
-                [sql appendFormat:@" %@ = %@ and",name,value];
-            }
-        } else {
-            if ([value isKindOfClass:[NSString class]]) {
-                [sql appendFormat:@" %@ = '%@' and",name,value];
+        if(value) {
+            //包含id为主键
+            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+            if ((range.length + range.location)== name.length){
+                if (![value isEqualToValue:@0]) {
+                    [sql appendFormat:@" %@ = %@ and",name,value];
+                }
             } else {
-                [sql appendFormat:@" %@ = %@ and",name,value];
+                if ([value isKindOfClass:[NSString class]]) {
+                    [sql appendFormat:@" %@ = '%@' and",name,value];
+                } else {
+                    [sql appendFormat:@" %@ = %@ and",name,value];
+                }
             }
         }
     }];
@@ -494,6 +505,4 @@ _shared_implement(LJSQLite)
     
     return [self queryPersonsWithSql:sql objClass:objClass];
 }
-
-
 @end

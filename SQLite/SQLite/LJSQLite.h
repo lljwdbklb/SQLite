@@ -119,4 +119,14 @@ _shared_interface(LJSQLite)
  *  @return YES:存在  NO:不存在
  */
 - (BOOL)isObject:(NSObject *)obj;
+
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param params   参数名
+ *
+ *  @return 返回的对象们
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params;
 @end
