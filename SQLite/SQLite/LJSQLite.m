@@ -104,53 +104,40 @@ _shared_implement(LJSQLite)
         
         NSMutableArray * arrayM = [NSMutableArray array];
         
-        unsigned int outCount = 0;
-        Ivar *ivars = class_copyIvarList(objClass, &outCount);
-        
         //判断是否有下一条记录
         while(SQLITE_ROW == sqlite3_step(stmt)){
             
             NSObject * obj = [[objClass alloc]init];
             
-            for (int i = 0; i<outCount; i++){
-                Ivar ivar = ivars[i];
-                
-                // 1.属性名
-                NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
-                //去下划线
-                name = [name substringFromIndex:1];
-                
-                //2.属性
-                NSString *type = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
-                
+            [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
                 if([type hasPrefix:@"@"]){
                     if ([type rangeOfString:@"String"].length){
-                        [obj setValue:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)] forKey:name];
+                        [obj setValue:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)] forKey:name];
                     } else if([type rangeOfString:@"Date"].length){
                         NSDateFormatter * fmt = [[NSDateFormatter alloc]init];
                         [fmt setDateFormat:kDateFmtStr];
-                        [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, i)]]forKey:name];
+                        [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)]]forKey:name];
                     } else if([type rangeOfString:@"Image"].length){
 #warning image
                     } else { //模型对象 这里实现多表查询 表的嵌套关系
                         //生成模型
                         Class subClass = NSClassFromString([type stringByReplacingClassName]);
-//                        NSObject * subObj = [[subClass alloc]init];
+                        //                        NSObject * subObj = [[subClass alloc]init];
                         //获取模型主键
                         NSString * primaryKey = [subClass primaryKeyName];
                         //获取对应的模型对象
-                        NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : [NSNumber numberWithInteger:sqlite3_column_int(stmt, i)]}];
+                        NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : [NSNumber numberWithInteger:sqlite3_column_int(stmt, idx)]}];
                         [obj setValue:subObj forKey:name];
                     }
                     
                 } else  { // 非对象类型
                     if ([type isEqualToString:@"d"]||[type isEqualToString:@"f"]){
-                        [obj setValue:[NSNumber numberWithDouble:sqlite3_column_double(stmt, i)] forKey:name];
+                        [obj setValue:[NSNumber numberWithDouble:sqlite3_column_double(stmt, idx)] forKey:name];
                     }  else {
-                        [obj setValue:[NSNumber numberWithInteger:sqlite3_column_int(stmt, i)] forKey:name];
+                        [obj setValue:[NSNumber numberWithInteger:sqlite3_column_int(stmt, idx)] forKey:name];
                     }
                 }
-            }
+            }];
             
             [arrayM addObject:obj];
         }
