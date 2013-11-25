@@ -9,7 +9,10 @@
 #import "NSObject+LJSQLite.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
+
+
 @implementation NSObject (LJSQLite)
+
 /**
  *  获取当前对象中的主键值
  *
@@ -19,24 +22,6 @@
 - (id)primaryKey {
     Class c = [self class];
     __block NSValue * value = nil;
-    
-//    unsigned int outCount = 0;
-//    Ivar *ivars = class_copyIvarList(c, &outCount);
-//
-//    for (int i = 0; i<outCount; i++){
-//        Ivar ivar = ivars[i];
-//        // 1.属性名
-//        NSString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)] ;
-//        
-//        //包含id为主键
-//        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-//        if ((range.length + range.location)== name.length){
-//            //去下划线
-//            name = [name substringFromIndex:1];
-//            value = [name valueForKey:name];
-//            break;
-//        }
-//    }
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //包含id为主键
@@ -48,6 +33,31 @@
     }];
     
     return value;
+}
+/**
+ *  获取当前对象中的主键名和对应参数
+ *
+ *  @return key主键名 value对应参数
+ */
+- (NSDictionary *)primaryKeyAndValue {
+//    Class c = [self class];
+    NSDictionary * primary = nil;
+    
+//    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+//        //包含id为主键
+//        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+//        if ((range.length + range.location)== name.length){
+//            primary = @{name : [self valueForKey:name]};
+//            *stop = YES;
+//        }
+//    }];
+    NSString * name = [self primaryKeyName];
+    NSValue * value = [self valueForKey:name];
+    if (value) {
+        primary = @{name:value};
+    }
+    
+    return primary;
 }
 /**
  *  遍历类的所有成员变量
@@ -88,5 +98,21 @@
         }
     }];
     return params;
+}
+
+- (NSString *)primaryKeyName {
+    static NSString * primaryKeyName = nil;
+    if (primaryKeyName == nil) {
+        Class c = [self class];
+        [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+            //包含id为主键
+            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+            if ((range.length + range.location)== name.length){
+                primaryKeyName = name;
+                *stop = YES;
+            }
+        }];
+    }
+    return primaryKeyName;
 }
 @end

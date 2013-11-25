@@ -17,7 +17,21 @@ typedef void(^IvarNamesUsingBlock)(NSString * name,NSString * type,int idx,BOOL 
  *
  *  @return 返回对象主键值
  */
-- (id)primaryKey;
+- (id)primaryKey NS_DEPRECATED_IOS(6_0, 7_0, "有更新的 NSObject primaryKeyAndValue");
+/**
+ *  获取当前对象中的主键名和对应参数
+ *
+ *  @return key主键名 value对应参数
+ */
+- (NSDictionary *)primaryKeyAndValue ;
+
+/**
+ *  获取当前对象中的主键名
+ *
+ *  @return 返回对象主键名
+ */
+- (NSString *)primaryKeyName;
+//@property (nonatomic,strong,readonly) NSString * primaryKeyName;
 
 /**
  *  遍历类的所有成员变量
