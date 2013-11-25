@@ -24,6 +24,7 @@
 		BF1C80CA184226A7007EDF07 /* LJSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80C8184226A7007EDF07 /* LJSQLite.m */; };
 		BF1C80CD184226CB007EDF07 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80CC184226CB007EDF07 /* Person.m */; };
 		BF1C80CF184227D2007EDF07 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */; };
+		BFC4051C1842DA32006AF9B8 /* LJSQLite+Where.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,9 @@
 		BF1C80CB184226CB007EDF07 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		BF1C80CC184226CB007EDF07 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		BFC4051A1842DA32006AF9B8 /* LJSQLite+Where.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LJSQLite+Where.h"; sourceTree = "<group>"; };
+		BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LJSQLite+Where.m"; sourceTree = "<group>"; };
+		BFC4051D1842E22B006AF9B8 /* LJSQLiteConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LJSQLiteConnection.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,7 +175,10 @@
 			children = (
 				BF1C80C7184226A7007EDF07 /* LJSQLite.h */,
 				BF1C80C8184226A7007EDF07 /* LJSQLite.m */,
+				BFC4051A1842DA32006AF9B8 /* LJSQLite+Where.h */,
+				BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */,
 				BF1C80C9184226A7007EDF07 /* Simple.h */,
+				BFC4051D1842E22B006AF9B8 /* LJSQLiteConnection.h */,
 			);
 			path = SQLite;
 			sourceTree = "<group>";
@@ -279,6 +286,7 @@
 				BF1C80CD184226CB007EDF07 /* Person.m in Sources */,
 				BF1C80A21842266F007EDF07 /* LJJAppDelegate.m in Sources */,
 				BF1C80A81842266F007EDF07 /* LJJViewController.m in Sources */,
+				BFC4051C1842DA32006AF9B8 /* LJSQLite+Where.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,6 +495,7 @@
 				BF1C80C218422670007EDF07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BF1C80C318422670007EDF07 /* Build configuration list for PBXNativeTarget "SQLiteTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +504,7 @@
 				BF1C80C518422670007EDF07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
