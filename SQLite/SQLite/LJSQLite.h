@@ -15,6 +15,10 @@
 #define kLOG
 #endif
 
+
+
+#define kTableName(objClass) [NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass) lowercaseString]]
+
 //不用后缀名，数据库名即可
 #define kDBName @"ljj"
 
@@ -49,7 +53,7 @@ _shared_interface(LJSQLite)
  *
  *  （注：只生成数据库里没有的表格）
  *
- *  @param objClassass      对象名
+ *  @param objClass         对象类
  *  @param autoincrement    主键自动增值属性，默认为NO
  *
  */
@@ -58,7 +62,7 @@ _shared_interface(LJSQLite)
 /**
  *  删除对象对应表格
  *
- *  @param objClass 对象名
+ *  @param objClass 对象类
  */
 -(void)dropTable:(Class)objClass;
 
@@ -90,7 +94,7 @@ _shared_interface(LJSQLite)
 /**
  *  查询相应类的表格的所有数据
  *
- *  @param objClass 对应的对象
+ *  @param objClass 对象类
  */
 -(NSArray *)allObjects:(Class)objClass;
 
@@ -98,7 +102,7 @@ _shared_interface(LJSQLite)
  *  返回指定sql查询的结果集
  *
  *  @param sql      sql语句
- *  @param objClass 对应的对象
+ *  @param objClass 对象类
  *
  *  @return 结果集
  */

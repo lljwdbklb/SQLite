@@ -13,8 +13,6 @@
 
 #define kFile(dbName) [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[dbName stringByAppendingPathExtension:@"db"]]
 
-#define kTableName(objClass) [NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass) lowercaseString]]
-
 @interface LJSQLite()
 {
     sqlite3         * _db;
@@ -155,7 +153,7 @@ _shared_implement(LJSQLite)
         [_tablesAuto addObject:tableName];
     }
     
-    NSMutableString * sql = [NSMutableString stringWithFormat:@"CREATE TABLE  %@ (",tableName];
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (",tableName];
     
     unsigned int outCount = 0;
     Ivar *ivars = class_copyIvarList(objClass, &outCount);
@@ -220,7 +218,6 @@ _shared_implement(LJSQLite)
     
     [self execSQL:sql msg:@"删除表格"];
     
-
 }
 
 #pragma mark - 数据操作
