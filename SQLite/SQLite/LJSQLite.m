@@ -465,6 +465,8 @@ _shared_implement(LJSQLite)
  *
  *  @param objClass 对象名
  *  @param params   参数名 , 参数为空 返回所有表中对象
+ *                  key：成员变量名 value：查询数据  如：@"name" : @"adf"
+ *                  where name = @"adf" and ...;
  *
  *  @return 返回的对象
  */

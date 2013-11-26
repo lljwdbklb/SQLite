@@ -3,7 +3,7 @@
 //  SQLLift
 //
 //  Created by Jun on 13-11-24.
-//  Copyright (c) 2013年 Jun. All rights reserved.
+//  Copyright (c)2013年 Jun. All rights reserved.
 //
 //  SQLite 封装
 //
@@ -17,7 +17,7 @@
 
 
 
-#define kTableName(objClass) [NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass) lowercaseString]]
+#define kTableName(objClass)[NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass)lowercaseString]]
 
 //不用后缀名，数据库名即可
 #define kDBName @"ljj"
@@ -41,7 +41,7 @@ _shared_interface(LJSQLite)
  *  @param sql sql语句
  *  @param msg 推送的消息
  */
-- (void) execSQL:(NSString *)sql msg:(NSString *)msg;
+- (void)execSQL:(NSString *)sql msg:(NSString *)msg;
 
 /**
  *
@@ -57,21 +57,21 @@ _shared_interface(LJSQLite)
  *  @param autoincrement    主键自动增值属性，默认为NO
  *
  */
-- (void) createTable:(Class)objClass autoincrement:(BOOL)autoincrement;
+- (void)createTable:(Class)objClass autoincrement:(BOOL)autoincrement;
 
 /**
  *  删除对象对应表格
  *
  *  @param objClass 对象类
  */
-- (void) dropTable:(Class)objClass;
+- (void)dropTable:(Class)objClass;
 
 /**
  *  添加一个对象数据到相应表格中
  *
  *  @param obj 对象
  */
-- (void) addObject:(NSObject *)obj;
+- (void)addObject:(NSObject *)obj;
 
 /**
  *  从相应的表格中删除一条对象数据
@@ -80,7 +80,7 @@ _shared_interface(LJSQLite)
  *
  *  @param obj 对象
  */
-- (void) deleteObject:(NSObject *)obj;
+- (void)deleteObject:(NSObject *)obj;
 
 /**
  *  从相应的表格中修改属性
@@ -89,14 +89,14 @@ _shared_interface(LJSQLite)
  *
  *  @param obj 对象
  */
-- (void) updateObject:(NSObject *)obj;
+- (void)updateObject:(NSObject *)obj;
 
 /**
  *  查询相应类的表格的所有数据
  *
  *  @param objClass 对象类
  */
-- (NSArray *) allObjects:(Class)objClass;
+- (NSArray *)allObjects:(Class)objClass;
 
 /**
  *  返回指定sql查询的结果集
@@ -106,7 +106,7 @@ _shared_interface(LJSQLite)
  *
  *  @return 结果集
  */
-- (NSArray *) queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass;
+- (NSArray *)queryPersonsWithSql:(NSString *)sql objClass:(Class)objClass;
 
 /**
  *  判断该对象数据是否存在对应数据表中
@@ -121,9 +121,11 @@ _shared_interface(LJSQLite)
  *  从对应的数据表中查找相应记录
  *
  *  @param objClass 对象名
- *  @param params   参数名
+ *  @param params   参数名 , 参数为空 返回所有表中对象
+ *                  key：成员变量名 value：查询数据  如：@"name" : @"adf"
+ *                  where name = @"adf" and ...;
  *
- *  @return 返回的对象们
+ *  @return 返回的对象
  */
 - (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params;
 @end
