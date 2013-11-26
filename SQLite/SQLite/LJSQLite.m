@@ -450,7 +450,7 @@ _shared_implement(LJSQLite)
 }
 
 /**
- *  从对应数据表中获取最后一个对象
+ *  从对应数据表中获取最后一个对象，性能有问题，不建议使用
  *
  *  @param objClass 对象类
  *
