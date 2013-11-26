@@ -255,7 +255,7 @@ _shared_implement(LJSQLite)
     Class c = [obj class];
     //表名
     NSString * tableName = kTableName(c);
-    NSMutableString * sql = [NSMutableString stringWithFormat:@"INSERT INTO  %@ (",tableName];
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"INSERT INTO  %@ ( ",tableName];
     
     //元素
     NSMutableArray * elems = [NSMutableArray array];
@@ -318,6 +318,7 @@ _shared_implement(LJSQLite)
                 //在数据表中查询该数据
                 if (![self isObject:elems[i]]){ //添加数据对象
                     [self addObject:elems[i]];
+                    /* 这里有问题，假设添加子数据出错了，下面会查找到最后一条数据赋值 */
                     value = [[self lastObject:[elems[i] class]] primaryKey];
                 } else {//查找数据对象
                     value = [[self objectsWithObjClass:[elems[i] class] params:[elems[i] params]][0] primaryKey];
@@ -426,11 +427,12 @@ _shared_implement(LJSQLite)
  */
 #pragma mark 查询表格
 - (NSArray *)allObjects:(Class)objClass {
-    NSString * tableName = kTableName(objClass);
+//    NSString * tableName = kTableName(objClass);
     //sql语句
-    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ;",tableName];
+//    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ;",tableName];
     
-    return [self queryPersonsWithSql:sql objClass:objClass];
+//    return [self queryPersonsWithSql:sql objClass:objClass];
+    return [self objectsWithObjClass:objClass params:nil];
 }
 
 /**
@@ -472,35 +474,37 @@ _shared_implement(LJSQLite)
     //表名
     NSString * tableName = kTableName(objClass);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ",tableName];
-    NSMutableString * where = [NSMutableString stringWithString:@" WHERE "];
-    __block BOOL isWhere = NO;
-    [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-         
-        NSValue * value = params[name];
-        if(value) {
-            //包含id为主键
-            NSString * primaryKeyName = [objClass primaryKeyName];
-            if ([primaryKeyName isEqualToString:name]) {
-                if (![value isEqualToValue:@0]) {
-                    [where appendFormat:@" %@ = %@ and",name,value];
+    if (params) {
+        NSMutableString * where = [NSMutableString stringWithString:@" WHERE "];
+        __block BOOL isWhere = NO;
+        [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+            
+            NSValue * value = params[name];
+            if(value) {
+                //包含id为主键
+                NSString * primaryKeyName = [objClass primaryKeyName];
+                if ([primaryKeyName isEqualToString:name]) {
+                    if (![value isEqualToValue:@0]) {
+                        [where appendFormat:@" %@ = %@ and",name,value];
+                        isWhere = YES;
+                    }
+                } else {
+                    if ([value isKindOfClass:[NSString class]]) {
+                        [where appendFormat:@" %@ = '%@' and",name,value];
+                    } else {
+                        [where appendFormat:@" %@ = %@ and",name,value];
+                    }
                     isWhere = YES;
                 }
-            } else {
-                if ([value isKindOfClass:[NSString class]]) {
-                    [where appendFormat:@" %@ = '%@' and",name,value];
-                } else {
-                    [where appendFormat:@" %@ = %@ and",name,value];
-                }
-                isWhere = YES;
             }
+        }];
+        if (isWhere) {
+            //去除最后and
+            [where deleteCharactersInRange:NSMakeRange(where.length - 3, 3)];
         }
-    }];
-    if (isWhere) {
-        //去除最后and
-        [where deleteCharactersInRange:NSMakeRange(where.length - 3, 3)];
+        [sql appendFormat:@"%@",where];
     }
-    
-    [sql appendFormat:@"%@;",where];
+    [sql appendString:@";"];
     
     return [self queryPersonsWithSql:sql objClass:objClass];
 }
