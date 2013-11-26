@@ -271,8 +271,9 @@ _shared_implement(LJSQLite)
         //有自动增值属性可以省去添加主键的操作
         //若没有则按照对象中的主键添加
 //        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+        //        if ((range.length + range.location) != name.length || ![_tablesAuto containsObject:tableName]){
+        
         NSString * primaryKeyName = [c primaryKeyName];
-//        if ((range.length + range.location) != name.length || ![_tablesAuto containsObject:tableName]){
         if (![primaryKeyName isEqualToString:name]) {
             NSValue * value = [obj valueForKey:name];
             //参数为空不运行
@@ -288,7 +289,6 @@ _shared_implement(LJSQLite)
                 } else {
                     [sql appendFormat:@"%@ ,",[name lowercaseString]];
                 }
-                
                 //参数
                 [elems addObject:value];
                 [types addObject:type];
@@ -351,8 +351,8 @@ _shared_implement(LJSQLite)
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //包含id为主键
-        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-        if ((range.length + range.location)== name.length){
+        NSString * primaryKeyName = [c primaryKeyName];
+        if ([primaryKeyName isEqualToString:name]) {
             //拼接
             [sql appendFormat:@"%@ = %@",[name lowercaseString] ,[obj valueForKey:name]];
             *stop = YES;
@@ -384,8 +384,8 @@ _shared_implement(LJSQLite)
          
         
         //包含id为主键
-        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-        if ((range.length + range.location)== name.length){
+        NSString * primaryKeyName = [c primaryKeyName];
+        if ([primaryKeyName isEqualToString:name]) {
             //拼接
             ID = [name lowercaseString];
             IDValue = [obj valueForKey:name];
@@ -445,7 +445,8 @@ _shared_implement(LJSQLite)
  */
 - (BOOL)isObject:(NSObject *)obj {
     Class c = [obj class];
-    return [[self allObjects:c] containsObject:obj];
+//    return [[self allObjects:c] containsObject:obj];
+    return [self objectsWithObjClass:c params:[obj params]].count;
 }
 
 /**
@@ -463,37 +464,43 @@ _shared_implement(LJSQLite)
  *  从对应的数据表中查找相应记录
  *
  *  @param objClass 对象名
- *  @param params   参数名
+ *  @param params   参数名 , 参数为空 返回所有表中对象
  *
- *  @return 返回的对象们
+ *  @return 返回的对象
  */
 - (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params {
     //表名
     NSString * tableName = kTableName(objClass);
-    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ WHERE ",tableName];
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ",tableName];
+    NSMutableString * where = [NSMutableString stringWithString:@" WHERE "];
+    __block BOOL isWhere = NO;
     [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
          
         NSValue * value = params[name];
         if(value) {
             //包含id为主键
-            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-            if ((range.length + range.location)== name.length){
+            NSString * primaryKeyName = [objClass primaryKeyName];
+            if ([primaryKeyName isEqualToString:name]) {
                 if (![value isEqualToValue:@0]) {
-                    [sql appendFormat:@" %@ = %@ and",name,value];
+                    [where appendFormat:@" %@ = %@ and",name,value];
+                    isWhere = YES;
                 }
             } else {
                 if ([value isKindOfClass:[NSString class]]) {
-                    [sql appendFormat:@" %@ = '%@' and",name,value];
+                    [where appendFormat:@" %@ = '%@' and",name,value];
                 } else {
-                    [sql appendFormat:@" %@ = %@ and",name,value];
+                    [where appendFormat:@" %@ = %@ and",name,value];
                 }
+                isWhere = YES;
             }
         }
     }];
-    //去除最后and
-    [sql deleteCharactersInRange:NSMakeRange(sql.length - 3, 3)];
+    if (isWhere) {
+        //去除最后and
+        [where deleteCharactersInRange:NSMakeRange(where.length - 3, 3)];
+    }
     
-    [sql appendString:@";"];
+    [sql appendFormat:@"%@;",where];
     
     return [self queryPersonsWithSql:sql objClass:objClass];
 }
