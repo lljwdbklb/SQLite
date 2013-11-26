@@ -270,8 +270,10 @@ _shared_implement(LJSQLite)
         //这句话只要是判断是否是有主键并判断是否有自动增值
         //有自动增值属性可以省去添加主键的操作
         //若没有则按照对象中的主键添加
-        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-        if ((range.length + range.location) != name.length || ![_tablesAuto containsObject:tableName]){
+//        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
+        NSString * primaryKeyName = [c primaryKeyName];
+//        if ((range.length + range.location) != name.length || ![_tablesAuto containsObject:tableName]){
+        if (![primaryKeyName isEqualToString:name]) {
             NSValue * value = [obj valueForKey:name];
             //参数为空不运行
             if (value){

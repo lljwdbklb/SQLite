@@ -112,7 +112,7 @@
  *  @return 返回主键
  */
 +(NSString *)primaryKeyName {
-    static NSString * primaryKeyName = nil;
+    __block NSString * primaryKeyName = nil;
     if (primaryKeyName == nil) {
         Class c = [self class];
         [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
