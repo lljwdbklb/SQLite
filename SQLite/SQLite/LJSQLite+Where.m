@@ -20,14 +20,14 @@
  *  @param where        查找条件 key：成员变量名 value：查询数据  如：@"name" : @"adf"
  *                  where name = @"adf" and ...;
  */
--(void)deleteObjects:(Class)objClass where:(NSDictionary *)where {
+- (void) deleteObjects:(Class)objClass whereParams:(NSDictionary *)params {
     //拼接where语句
     NSMutableString * whereStr = [NSMutableString string];
     
-    NSArray * array = [where allKeys];
+    NSArray * array = [params allKeys];
     
     for (NSString * name in array) {
-        NSValue * value = where[name];
+        NSValue * value = params[name];
         if ([value isKindOfClass:[NSString class]]) {
             [whereStr appendFormat:@" %@ = '%@' and",name,value];
         } else {
@@ -35,6 +35,7 @@
         }
         
     }
+    //去除最后and
     [whereStr deleteCharactersInRange:NSMakeRange(whereStr.length - 3, 3)];
     
     [self deleteObjects:objClass whereStr:whereStr];
@@ -45,7 +46,7 @@
  *  @param objClass 对象类
  *  @param whereStr 判断字符串  例如：@"name = 'bac' and age = 12 or height > 1.1 and height < 5"
  */
--(void)deleteObjects:(Class)objClass whereStr:(NSString *)whereStr {
+- (void) deleteObjects:(Class)objClass whereStr:(NSString *)whereStr {
     //表名
     NSString * tableName = kTableName(objClass);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"DELETE FROM %@ WHERE ",tableName];
@@ -56,6 +57,8 @@
     
     [self execSQL:sql msg:@"删除数据"];
 }
+
+
 
 //-(NSArray *)allObjects:(Class)objClass where:(NSDictionary *)where {
 //
