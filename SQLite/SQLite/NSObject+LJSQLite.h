@@ -26,9 +26,12 @@ typedef void(^IvarNamesUsingBlock)(NSString * name,NSString * type,int idx,BOOL 
 - (NSDictionary *)primaryKeyAndValue ;
 
 /**
- *  获取当前对象中的主键名
+ *  获取类/对象中成员变量主键名
  *
- *  @return 返回对象主键名
+ *  主键的判断是，要不是id为名，或后缀名_id
+ *  如：ID 或 p_id、b_id.....
+ *
+ *  @return 返回主键
  */
 - (NSString *)primaryKeyName;
 + (NSString *)primaryKeyName;

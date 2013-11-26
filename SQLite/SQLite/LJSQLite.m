@@ -120,14 +120,17 @@ _shared_implement(LJSQLite)
                     } else if([type rangeOfString:@"Image"].length){
 #warning image
                     } else { //模型对象 这里实现多表查询 表的嵌套关系
+                        
                         //生成模型
                         Class subClass = NSClassFromString([type stringByReplacingClassName]);
-                        //                        NSObject * subObj = [[subClass alloc]init];
-                        //获取模型主键
-                        NSString * primaryKey = [subClass primaryKeyName];
-                        //获取对应的模型对象
-                        NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : [NSNumber numberWithInteger:sqlite3_column_int(stmt, idx)]}];
-                        [obj setValue:subObj forKey:name];
+                        NSValue * value = [NSNumber numberWithInteger:sqlite3_column_int(stmt, idx)];
+                        if (value) {                            
+                            //获取模型主键
+                            NSString * primaryKey = [subClass primaryKeyName];
+                            //获取对应的模型对象
+                            NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : value}];
+                            [obj setValue:subObj forKey:name];
+                        }
                     }
                     
                 } else  { // 非对象类型

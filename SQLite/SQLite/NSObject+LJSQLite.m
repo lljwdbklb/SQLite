@@ -101,29 +101,26 @@
 }
 
 - (NSString *)primaryKeyName {
-//    static NSString * primaryKeyName = nil;
-//    if (primaryKeyName == nil) {
-//        Class c = [self class];
-//        [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-//            //包含id为主键
-//            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-//            if ((range.length + range.location)== name.length){
-//                primaryKeyName = name;
-//                *stop = YES;
-//            }
-//        }];
-//    }
     return [[self class] primaryKeyName];
 }
-
+/**
+ *  获取类中主键名
+ *
+ *  主键的判断是，要不是id为名，或后缀名_id
+ *  如：ID 或 p_id、b_id.....
+ *
+ *  @return 返回主键
+ */
 +(NSString *)primaryKeyName {
     static NSString * primaryKeyName = nil;
     if (primaryKeyName == nil) {
         Class c = [self class];
         [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+            NSString * lowerName = [name lowercaseString];
             //包含id为主键
-            NSRange range = [[name lowercaseString] rangeOfString:@"id"];
-            if ((range.length + range.location)== name.length){
+            NSRange range = [lowerName rangeOfString:@"_id"];
+//            if ((range.length + range.location)== name.length){
+            if([lowerName isEqualToString:@"id"] || (range.length + range.location) == lowerName.length) {
                 primaryKeyName = name;
                 *stop = YES;
             }
