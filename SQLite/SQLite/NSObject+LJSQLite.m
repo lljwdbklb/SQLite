@@ -53,7 +53,7 @@
 //    }];
     NSString * name = [self primaryKeyName];
     NSValue * value = [self valueForKey:name];
-    if (value) {
+    if (value && ![value isEqualToValue:@0]) {
         primary = @{name:value};
     }
     

@@ -14,8 +14,9 @@
 
 #import "NSString+LJSQLite.h"
 #import "NSObject+LJSQLite.h"
+#import "NSDictionary+SQLite.h"
 
-#define kFile(dbName)[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[dbName stringByAppendingPathExtension:@"db"]]
+#define kFile(dbName) [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:[dbName stringByAppendingPathExtension:@"db"]]
 
 #define kDateFmtStr @"yyyy-MM-dd hh:mm:ss"
 
@@ -347,18 +348,20 @@ _shared_implement(LJSQLite)
     Class c = [obj class];
     //表名
     NSString * tableName = kTableName(c);
-    NSMutableString * sql = [NSMutableString stringWithFormat:@"DELETE FROM %@ WHERE ",tableName];
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"DELETE FROM %@ ",tableName];
+//    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+//        //包含id为主键
+//        NSString * primaryKeyName = [c primaryKeyName];
+//        if ([primaryKeyName isEqualToString:name]) {
+//            //拼接
+//            [sql appendFormat:@"%@ = %@",[name lowercaseString] ,[obj valueForKey:name]];
+//            *stop = YES;
+//        }
+//    }];
+    if([obj primaryKeyAndValue]) {
+        [sql appendString:[[obj primaryKeyAndValue] stringByWhereSQLConversion]];
+    }
     
-    
-    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-        //包含id为主键
-        NSString * primaryKeyName = [c primaryKeyName];
-        if ([primaryKeyName isEqualToString:name]) {
-            //拼接
-            [sql appendFormat:@"%@ = %@",[name lowercaseString] ,[obj valueForKey:name]];
-            *stop = YES;
-        }
-    }];
     [self execSQL:sql msg:@"删除一条数据"];
 }
 
@@ -378,17 +381,20 @@ _shared_implement(LJSQLite)
     NSMutableString * sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ",tableName];
 
     //存放id
-    __block NSString * ID;
-    __block NSString * IDValue;
+//    __block NSString * ID;
+//    __block NSString * IDValue;
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         //包含id为主键
         NSString * primaryKeyName = [c primaryKeyName];
-        if ([primaryKeyName isEqualToString:name]) {
-            //拼接
-            ID = [name lowercaseString];
-            IDValue = [obj valueForKey:name];
-        } else {
+//        if ([primaryKeyName isEqualToString:name])
+//        {
+//            //拼接
+//            ID = [name lowercaseString];
+//            IDValue = [obj valueForKey:name];
+//        }
+//        else {
+        if (![primaryKeyName isEqualToString:name]) {
             NSValue * value = [obj valueForKey:name];
             //判断是否有字符串
             if (value) {
@@ -411,8 +417,11 @@ _shared_implement(LJSQLite)
     //去除最后的逗号
     [sql deleteCharactersInRange:NSMakeRange(sql.length -  1, 1)];
     
-    if (ID){
-        [sql appendFormat:@" WHERE %@ = %@;",ID,IDValue];
+//    if (ID){
+//    [sql appendFormat:@" WHERE %@ = %@;",ID,IDValue];
+//    }
+    if ([obj primaryKeyAndValue]) {
+        [sql appendString:[[obj primaryKeyAndValue] stringByWhereSQLConversion]];
     }
 
     [self execSQL:sql msg:@"更新一条数据"];
