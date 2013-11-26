@@ -240,7 +240,8 @@ _shared_implement(LJSQLite)
     //表名
     NSString * tableName = kTableName([objClass class]);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"DROP TABLE  %@;",tableName];
-    
+    [_tables removeObject:tableName];
+    [_tablesAuto removeObject:tableName];
     [self execSQL:sql msg:@"删除表格"];
     
 }
@@ -484,34 +485,34 @@ _shared_implement(LJSQLite)
     NSString * tableName = kTableName(objClass);
     NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ",tableName];
     if (params) {
-        NSMutableString * where = [NSMutableString stringWithString:@" WHERE "];
-        __block BOOL isWhere = NO;
-        [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-            
-            NSValue * value = params[name];
-            if(value) {
-                //包含id为主键
-                NSString * primaryKeyName = [objClass primaryKeyName];
-                if ([primaryKeyName isEqualToString:name]) {
-                    if (![value isEqualToValue:@0]) {
-                        [where appendFormat:@" %@ = %@ and",name,value];
-                        isWhere = YES;
-                    }
-                } else {
-                    if ([value isKindOfClass:[NSString class]]) {
-                        [where appendFormat:@" %@ = '%@' and",name,value];
-                    } else {
-                        [where appendFormat:@" %@ = %@ and",name,value];
-                    }
-                    isWhere = YES;
-                }
-            }
-        }];
-        if (isWhere) {
-            //去除最后and
-            [where deleteCharactersInRange:NSMakeRange(where.length - 3, 3)];
-        }
-        [sql appendFormat:@"%@",where];
+//        NSMutableString * where = [NSMutableString stringWithString:@" WHERE "];
+//        __block BOOL isWhere = NO;
+//        [objClass enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
+//            
+//            NSValue * value = params[name];
+//            if(value) {
+//                //包含id为主键
+//                NSString * primaryKeyName = [objClass primaryKeyName];
+//                if ([primaryKeyName isEqualToString:name]) {
+//                    if (![value isEqualToValue:@0]) {
+//                        [where appendFormat:@" %@ = %@ and",name,value];
+//                        isWhere = YES;
+//                    }
+//                } else {
+//                    if ([value isKindOfClass:[NSString class]]) {
+//                        [where appendFormat:@" %@ = '%@' and",name,value];
+//                    } else {
+//                        [where appendFormat:@" %@ = %@ and",name,value];
+//                    }
+//                    isWhere = YES;
+//                }
+//            }
+//        }];
+//        if (isWhere) {
+//            //去除最后and
+//            [where deleteCharactersInRange:NSMakeRange(where.length - 3, 3)];
+//        }
+        [sql appendString:[params stringByWhereSQLConversion]];
     }
     [sql appendString:@";"];
     
