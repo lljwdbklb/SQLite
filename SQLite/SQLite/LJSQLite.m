@@ -382,8 +382,6 @@ _shared_implement(LJSQLite)
     __block NSString * IDValue;
     
     [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
-         
-        
         //包含id为主键
         NSString * primaryKeyName = [c primaryKeyName];
         if ([primaryKeyName isEqualToString:name]) {
