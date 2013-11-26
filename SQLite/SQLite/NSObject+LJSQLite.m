@@ -42,7 +42,6 @@
 - (NSDictionary *)primaryKeyAndValue {
 //    Class c = [self class];
     NSDictionary * primary = nil;
-    
 //    [c enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
 //        //包含id为主键
 //        NSRange range = [[name lowercaseString] rangeOfString:@"id"];
@@ -67,7 +66,6 @@
 + (void)enumerateIvarNamesUsingBlock:(IvarNamesUsingBlock)block {
     unsigned int outCount = 0;
     Ivar *ivars = class_copyIvarList(self, &outCount);
-    
     for (int i = 0; i<outCount; i++){
         Ivar ivar = ivars[i];
         // 1.属性名
@@ -80,11 +78,9 @@
         if (block) {
             block(name,type,i,&stop);
         }
-        
         if (stop) {
             break;
         }
-        
     }
 }
 
@@ -94,7 +90,14 @@
     [[self class] enumerateIvarNamesUsingBlock:^(NSString *name, NSString *type, int idx, BOOL *stop) {
         NSValue * value = [self valueForKey:name];
         if (value) {
-            [params setObject:value forKey:name];
+            NSString* primaryKeyName = [self primaryKeyName];
+            if ([primaryKeyName isEqualToString:name]) {
+                if(![value isEqualToValue:@0]) {
+                    [params setObject:value forKey:name];
+                }
+            }else {
+                [params setObject:value forKey:name];
+            }
         }
     }];
     return params;
