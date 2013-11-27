@@ -130,7 +130,7 @@ _shared_interface(LJSQLite)
  *
  *  @return 返回的对象
  */
-- (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params;
+- (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params NS_DEPRECATED_IOS(6_0, 7_0, "有更新的 - objectsWithObjClass:whereParams:limit:count:");
 
 /**
  *  从对应的数据表中查找相应记录
@@ -145,4 +145,36 @@ _shared_interface(LJSQLite)
  *  @return 结果集
  */
 - (NSArray *)objectsWithObjClass:(Class)objClass whereStr:(NSString *)whereStr orderBy:(NSDictionary *)orderBy limit:(NSRange)limit count:(int *)count;
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param params   参数名 , 参数为空 返回所有表中对象
+ *                  key：成员变量名 value：查询数据  如：@"name" : @"adf"
+ *                  where name = @"adf" and ...;
+ *
+ *  @param orderBy  需要排序的字段 ，key该成员变量名，value 为 kOrderByASC 或者 kOrderByDESC
+ *  @param limit    结果范围，{当前位置（页数*长度），长度}。（用于分页）
+ 长度为0，则返回全部数据
+ *  @param count    返回长度，发送为0 则无数据
+ *
+ *  @return 结果集
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass whereParams:(NSDictionary *)params orderBy:(NSDictionary *)orderBy limit:(NSRange)limit count:(int *)count;
+
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param params   参数名 , 参数为空 返回所有表中对象
+ *                  key：成员变量名 value：查询数据  如：@"name" : @"adf"
+ *                  where name = @"adf" and ...;
+ *
+ *  @param limit    结果范围，{当前位置（页数*长度），长度}。（用于分页）
+ 长度为0，则返回全部数据
+ *  @param count    返回长度，发送为0 则无数据
+ *
+ *  @return 结果集
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass whereParams:(NSDictionary *)params limit:(NSRange)limit count:(int *)count;
 @end
