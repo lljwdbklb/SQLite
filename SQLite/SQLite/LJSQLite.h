@@ -17,10 +17,13 @@
 
 
 
-#define kTableName(objClass)[NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass)lowercaseString]]
+#define kTableName(objClass) [NSString stringWithFormat:@"t_%@",[NSStringFromClass(objClass)lowercaseString]]
 
 //不用后缀名，数据库名即可
-#define kDBName @"ljj"
+#define kDBName         @"ljj"
+
+#define kOrderByASC     @"ASC"
+#define kOrderByDESC    @"ASC"
 
 @interface LJSQLite : NSObject
 _shared_interface(LJSQLite)
@@ -128,4 +131,18 @@ _shared_interface(LJSQLite)
  *  @return 返回的对象
  */
 - (NSArray *)objectsWithObjClass:(Class)objClass params:(NSDictionary *)params;
+
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param whereStr where语句  where name = @"adf" and ... or ...
+ *  @param orderBy  需要排序的字段 ，key该成员变量名，value 为 kOrderByASC 或者 kOrderByDESC
+ *  @param limit    结果范围，{当前位置（页数*长度），长度}。（用于分页）
+ 长度为0，则返回全部数据
+ *  @param count    返回长度，发送为0 则无数据
+ *
+ *  @return 结果集
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass whereStr:(NSString *)whereStr orderBy:(NSDictionary *)orderBy limit:(NSRange)limit count:(int *)count;
 @end

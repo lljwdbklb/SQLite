@@ -60,6 +60,7 @@ _shared_implement(LJSQLite)
     if(SQLITE_OK == sqlite3_open(kFile(kDBName).UTF8String, &_db)){
 #ifdef kLOG
         NSLog(@"创建数据库成功");
+        NSLog(@"File -- %@",kFile(kDBName));
 #endif
     } else {
 #ifdef kLOG
@@ -119,7 +120,7 @@ _shared_implement(LJSQLite)
                         [fmt setDateFormat:kDateFmtStr];
                         [obj setValue:[fmt dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)]]forKey:name];
                     } else if([type rangeOfString:@"Image"].length){
-#warning image
+#warning 图片格式研究中
                     } else { //模型对象 这里实现多表查询 表的嵌套关系
                         
                         //生成模型
@@ -313,7 +314,7 @@ _shared_implement(LJSQLite)
                 [fmt setDateFormat:kDateFmtStr];
                 [sql appendFormat:@"'%@' ,",[fmt stringFromDate:elems[i]]];
             } else if([type rangeOfString:@"Image"].length){
-#warning 图片格式
+#warning 图片格式研究中
 //                [sql appendFormat:@"'%@' ,",[UIImagePNGRepresentation(elems[i])bytes]];
             } else {
                 NSValue * value = nil;
@@ -520,5 +521,54 @@ _shared_implement(LJSQLite)
     [sql appendString:@";"];
     
     return [self queryPersonsWithSql:sql objClass:objClass];
+}
+
+
+// SELECT * FROM t_person WHERE age >  13 ORDER BY p_id ASC LIMIT 0,3;
+/**
+ *  从对应的数据表中查找相应记录
+ *
+ *  @param objClass 对象名
+ *  @param whereStr where语句  where name = @"adf" and ... or ...
+ *  @param orderBy  需要排序的字段 ，key该成员变量名，value 为 kOrderByASC 或者 kOrderByDESC
+ *  @param limit    结果范围，{当前位置（页数*长度），长度}。（用于分页）
+                    长度为0，则返回全部数据
+ *  @param count    返回长度，发送为0 则无数据
+ *
+ *  @return 结果集
+ */
+- (NSArray *)objectsWithObjClass:(Class)objClass whereStr:(NSString *)whereStr orderBy:(NSDictionary *)orderBy limit:(NSRange)limit count:(int *)count{
+    //表名
+    NSString * tableName = kTableName(objClass);
+    NSMutableString * sql = [NSMutableString stringWithFormat:@"SELECT * FROM %@ ",tableName];
+    if (whereStr) {
+        [sql appendString:whereStr];
+    }
+    if (orderBy) {
+        NSArray * keys = [orderBy allKeys];
+        [sql appendString:@" ORDER BY "];
+        for (NSString * key in keys) {
+            NSString * value = [orderBy valueForKey:key];
+            if (![value isEqualToString:kOrderByASC] || ![value isEqualToString:kOrderByDESC]) {
+                NSLog(@"你的排序变量有误请认真查看");
+                return nil;
+            } else {
+                [sql appendFormat:@" %@ %@ ,",key,value];
+            }
+        };
+        //去除逗号
+        [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
+    }
+    if (limit.length != 0) {
+        [sql appendFormat:@" LIMIT %d,%d ",limit.location,limit.length];
+    }
+    [sql appendString:@";"];
+    
+    NSArray * result = [self queryPersonsWithSql:sql objClass:objClass];
+    NSLog(@"%@",sql);
+    if (count) {
+        *count = result.count;
+    }
+    return result;
 }
 @end
