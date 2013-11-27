@@ -467,7 +467,10 @@ _shared_implement(LJSQLite)
  *  @return 返回最后一个对象
  */
 - (id)lastObject:(Class)objClass {
-    return [self allObjects:objClass].lastObject;
+    //SELECT * FROM t_person ORDER BY p_id DESC LIMIT 1
+    NSString * sql = [NSString stringWithFormat: @"SELECT * FROM %@ ORDER BY %@ DESC LIMIT 1;",kTableName(objClass),[objClass primaryKeyName]];
+    return [self queryPersonsWithSql:sql objClass:objClass][0];
+//    return [self allObjects:objClass].lastObject;
 }
 
 /**
