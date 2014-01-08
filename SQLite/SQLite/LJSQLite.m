@@ -126,12 +126,17 @@ _shared_implement(LJSQLite)
                         //生成模型
                         Class subClass = NSClassFromString([type stringByReplacingClassName]);
                         NSValue * value = [NSNumber numberWithInteger:sqlite3_column_int(stmt, idx)];
-                        if (value) {                            
+                        if (value && ![value isEqualToValue:@0]) {
                             //获取模型主键
                             NSString * primaryKey = [subClass primaryKeyName];
                             //获取对应的模型对象
-                            NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : value}];
-                            [obj setValue:subObj forKey:name];
+//                            NSObject * subObj = [self objectsWithObjClass:subClass params:@{primaryKey : value}];
+                            int count = 0;
+                            NSArray * array = [self objectsWithObjClass:subClass whereParams:@{primaryKey : value} limit:NSMakeRange(0, 1) count:&count];
+                            if (count) {
+                                NSObject * subObj = array[0];
+                                [obj setValue:subObj forKey:name];
+                            }
                         }
                     }
                     
@@ -324,7 +329,8 @@ _shared_implement(LJSQLite)
                     /* 这里有问题，假设添加子数据出错了，下面会查找到最后一条数据赋值 */
                     value = [[self lastObject:[elems[i] class]] primaryKey];
                 } else {//查找数据对象
-                    value = [[self objectsWithObjClass:[elems[i] class] params:[elems[i] params]][0] primaryKey];
+//                    value = [[self objectsWithObjClass:[elems[i] class] params:[elems[i] params]][0] primaryKey];
+                    value = [self objectsWithObjClass:[elems[i] class] whereParams:[elems[i] params] limit:NSMakeRange(0, 1) count:nil][0];
                 }
                 [sql appendFormat:@"%@ ,",value];
             }
@@ -457,7 +463,8 @@ _shared_implement(LJSQLite)
 - (BOOL)isObject:(NSObject *)obj {
     Class c = [obj class];
 //    return [[self allObjects:c] containsObject:obj];
-    return [self objectsWithObjClass:c params:[obj params]].count;
+//    return [self objectsWithObjClass:c params:[obj params]].count;
+    return [self objectsWithObjClass:c whereParams:[obj params] limit:NSMakeRange(0, 1) count:nil].count;
 }
 
 /**
@@ -565,7 +572,7 @@ _shared_implement(LJSQLite)
     [sql appendString:@";"];
     
     NSArray * result = [self queryPersonsWithSql:sql objClass:objClass];
-    NSLog(@"%@",sql);
+
     if (count) {
         *count = result.count;
     }
@@ -611,6 +618,10 @@ _shared_implement(LJSQLite)
 - (NSArray *)objectsWithObjClass:(Class)objClass whereParams:(NSDictionary *)params limit:(NSRange)limit count:(int *)count {
     
     return [self objectsWithObjClass:objClass whereParams:params orderBy:nil limit:limit count:count];
+}
+
+- (NSArray *)allObjects:(Class)objClass count:(int *)count {
+    return [self objectsWithObjClass:objClass whereParams:nil limit:NSMakeRange(0, 0) count:count];
 }
 
 @end

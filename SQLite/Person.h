@@ -7,14 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class Book;
 @interface Person : NSObject
 
-@property (nonatomic,assign)int p_id;
+@property (nonatomic,assign)    int         p_id;
 
-@property (nonatomic,strong)NSString * name;
+@property (nonatomic,strong)    NSString    * name;
 
-@property (nonatomic,assign)int age;
+@property (nonatomic,assign)    int         age;
 
-@property (nonatomic,assign)double height;
+@property (nonatomic,assign)    double      height;
+
+@property (nonatomic,strong)    NSDate      * time;
+
+@property (nonatomic,strong)    Book        * book;
 @end

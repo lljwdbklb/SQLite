@@ -9,7 +9,16 @@
 #import "Person.h"
 
 @implementation Person
+-(id)init {
+    if (self = [super init]) {
+        _time = [NSDate date];
+    }
+    return self;
+}
+
+
+
 -(NSString *)description {
-    return [NSString stringWithFormat:@"<Person: %p , id: %d , name: %@ , age: %d ,height: %g >",self,self.p_id,self.name,self.age,self.height];
+    return [NSString stringWithFormat:@"<Person: %p , id: %d , name: %@ , age: %d ,height: %g , book: %@>",self,self.p_id,self.name,self.age,self.height,self.book];
 }
 @end

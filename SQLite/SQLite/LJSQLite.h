@@ -99,7 +99,7 @@ _shared_interface(LJSQLite)
  *
  *  @param objClass 对象类
  */
-- (NSArray *)allObjects:(Class)objClass;
+- (NSArray *)allObjects:(Class)objClass NS_DEPRECATED_IOS(6_0, 7_0, "有更新的 - allObjects:count:");
 
 /**
  *  返回指定sql查询的结果集
@@ -177,4 +177,11 @@ _shared_interface(LJSQLite)
  *  @return 结果集
  */
 - (NSArray *)objectsWithObjClass:(Class)objClass whereParams:(NSDictionary *)params limit:(NSRange)limit count:(int *)count;
+/**
+ *  查询相应类的表格的所有数据
+ *
+ *  @param objClass 对象类
+ *  @param count    返回长度，发送为0 则无数据
+ */
+- (NSArray *)allObjects:(Class)objClass count:(int *)count;
 @end

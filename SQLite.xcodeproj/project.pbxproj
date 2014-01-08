@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF098E2E18434AD800878697 /* NSObject+LJSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BF098E2D18434AD800878697 /* NSObject+LJSQLite.m */; };
 		BF1C80921842266F007EDF07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80911842266F007EDF07 /* Foundation.framework */; };
 		BF1C80941842266F007EDF07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80931842266F007EDF07 /* CoreGraphics.framework */; };
 		BF1C80961842266F007EDF07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80951842266F007EDF07 /* UIKit.framework */; };
@@ -24,7 +25,10 @@
 		BF1C80CA184226A7007EDF07 /* LJSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80C8184226A7007EDF07 /* LJSQLite.m */; };
 		BF1C80CD184226CB007EDF07 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C80CC184226CB007EDF07 /* Person.m */; };
 		BF1C80CF184227D2007EDF07 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */; };
+		BF2FFD5B1844B9EA00E9E9F1 /* NSDictionary+SQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2FFD5A1844B9EA00E9E9F1 /* NSDictionary+SQLite.m */; };
 		BFC4051C1842DA32006AF9B8 /* LJSQLite+Where.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */; };
+		BFC405201843211A006AF9B8 /* Book.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4051F1843211A006AF9B8 /* Book.m */; };
+		BFC4052318432247006AF9B8 /* NSString+LJSQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4052218432247006AF9B8 /* NSString+LJSQLite.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BF098E2C18434AD800878697 /* NSObject+LJSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+LJSQLite.h"; sourceTree = "<group>"; };
+		BF098E2D18434AD800878697 /* NSObject+LJSQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+LJSQLite.m"; sourceTree = "<group>"; };
 		BF1C808E1842266F007EDF07 /* SQLite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SQLite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF1C80911842266F007EDF07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BF1C80931842266F007EDF07 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -63,9 +69,15 @@
 		BF1C80CB184226CB007EDF07 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		BF1C80CC184226CB007EDF07 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		BF1C80CE184227D2007EDF07 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		BF2FFD591844B9EA00E9E9F1 /* NSDictionary+SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SQLite.h"; sourceTree = "<group>"; };
+		BF2FFD5A1844B9EA00E9E9F1 /* NSDictionary+SQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SQLite.m"; sourceTree = "<group>"; };
 		BFC4051A1842DA32006AF9B8 /* LJSQLite+Where.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LJSQLite+Where.h"; sourceTree = "<group>"; };
 		BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LJSQLite+Where.m"; sourceTree = "<group>"; };
 		BFC4051D1842E22B006AF9B8 /* LJSQLiteConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LJSQLiteConnection.h; sourceTree = "<group>"; };
+		BFC4051E1843211A006AF9B8 /* Book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Book.h; sourceTree = "<group>"; };
+		BFC4051F1843211A006AF9B8 /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Book.m; sourceTree = "<group>"; };
+		BFC4052118432247006AF9B8 /* NSString+LJSQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LJSQLite.h"; sourceTree = "<group>"; };
+		BFC4052218432247006AF9B8 /* NSString+LJSQLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LJSQLite.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +147,8 @@
 				BF1C80A71842266F007EDF07 /* LJJViewController.m */,
 				BF1C80CB184226CB007EDF07 /* Person.h */,
 				BF1C80CC184226CB007EDF07 /* Person.m */,
+				BFC4051E1843211A006AF9B8 /* Book.h */,
+				BFC4051F1843211A006AF9B8 /* Book.m */,
 				BF1C80A91842266F007EDF07 /* Images.xcassets */,
 				BF1C80981842266F007EDF07 /* Supporting Files */,
 			);
@@ -179,6 +193,12 @@
 				BFC4051B1842DA32006AF9B8 /* LJSQLite+Where.m */,
 				BF1C80C9184226A7007EDF07 /* Simple.h */,
 				BFC4051D1842E22B006AF9B8 /* LJSQLiteConnection.h */,
+				BFC4052118432247006AF9B8 /* NSString+LJSQLite.h */,
+				BFC4052218432247006AF9B8 /* NSString+LJSQLite.m */,
+				BF2FFD591844B9EA00E9E9F1 /* NSDictionary+SQLite.h */,
+				BF2FFD5A1844B9EA00E9E9F1 /* NSDictionary+SQLite.m */,
+				BF098E2C18434AD800878697 /* NSObject+LJSQLite.h */,
+				BF098E2D18434AD800878697 /* NSObject+LJSQLite.m */,
 			);
 			path = SQLite;
 			sourceTree = "<group>";
@@ -282,10 +302,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF1C809E1842266F007EDF07 /* main.m in Sources */,
+				BFC4052318432247006AF9B8 /* NSString+LJSQLite.m in Sources */,
 				BF1C80CA184226A7007EDF07 /* LJSQLite.m in Sources */,
 				BF1C80CD184226CB007EDF07 /* Person.m in Sources */,
 				BF1C80A21842266F007EDF07 /* LJJAppDelegate.m in Sources */,
 				BF1C80A81842266F007EDF07 /* LJJViewController.m in Sources */,
+				BFC405201843211A006AF9B8 /* Book.m in Sources */,
+				BF098E2E18434AD800878697 /* NSObject+LJSQLite.m in Sources */,
+				BF2FFD5B1844B9EA00E9E9F1 /* NSDictionary+SQLite.m in Sources */,
 				BFC4051C1842DA32006AF9B8 /* LJSQLite+Where.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

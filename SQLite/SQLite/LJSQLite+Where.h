@@ -15,7 +15,7 @@
  *  删除对应数据表的对象数据
  *
  *  @param objClass     对象类
- *  @param where        查找条件 key：成员变量名 value：查询数据  如：@"name" : @"adf"
+ *  @param params       查找条件 key：成员变量名 value：查询数据  如：@"name" : @"adf"
  *                  where name = @"adf" and ...;
  */
 - (void)deleteObjects:(Class)objClass whereParams:(NSDictionary *)params;

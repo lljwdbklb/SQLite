@@ -7,8 +7,9 @@
 //
 
 #import "LJJViewController.h"
-#import "LJSQLite.h"
+#import "LJSQLiteConnection.h"
 #import "Person.h"
+#import "Book.h"
 
 @interface LJJViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -43,12 +44,16 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 //    _dataList = [NSArray array];
-
 }
 
 #pragma mark 常见表格
 -(IBAction)createTable {
     [[LJSQLite sharedLJSQLite] createTable:[Person class] autoincrement:YES];
+}
+- (IBAction)dropTable {
+    
+    [[LJSQLite sharedLJSQLite]dropTable:[Person class]];
+    [[LJSQLite sharedLJSQLite]dropTable:[Book class]];
 }
 #pragma mark 添加一条数据
 - (IBAction)addData {
@@ -74,7 +79,7 @@
     [[LJSQLite sharedLJSQLite] updateObject:p];
 }
 - (IBAction)selectDatas:(id)sender {
-    _dataList = [[LJSQLite sharedLJSQLite] allObjects:[Person class]];
+    _dataList = [[LJSQLite sharedLJSQLite] allObjects:[Person class] count:nil];
     [_tableview reloadData];
     
 }
